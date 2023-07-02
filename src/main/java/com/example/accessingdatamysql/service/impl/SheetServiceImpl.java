@@ -1,7 +1,7 @@
 package com.example.accessingdatamysql.service.impl;
 
-import com.example.accessingdatamysql.entity.Test;
-import com.example.accessingdatamysql.repository.SheetRepository;
+import com.example.accessingdatamysql.dao.impl.SheetDAOImpl;
+import com.example.accessingdatamysql.entity.Sheet;
 import com.example.accessingdatamysql.service.SheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,39 +12,45 @@ import java.util.List;
 public class SheetServiceImpl implements SheetService {
 
 
-    private SheetRepository sheetRepository;
+    private SheetDAOImpl sheetDAOImpl;
 
     @Autowired
-    public SheetServiceImpl(SheetRepository sheetRepository){
-        this.sheetRepository = sheetRepository;
+    public SheetServiceImpl(SheetDAOImpl sheetDAOImpl){
+        this.sheetDAOImpl = sheetDAOImpl;
     }
     @Override
-    public List<Test> getSheetListForStudent(int studentId) {
-        return null;
-    }
+    public List<Sheet> getSheetListByStudentId(int studentId) {
 
-    @Override
-    public Test getSheetByIdForStudent(int testId, int studentId) {
-        return null;
+        return sheetDAOImpl.getSheetListByStudentId(studentId);
     }
 
     @Override
-    public void saveSheetQuestion(int questionId, int sheetId) {
+    public Sheet getSheetByTestIdAndStudentId(int testId, int studentId) {
 
+        return sheetDAOImpl.getSheetByTestIdAndStudentId(testId, studentId);
     }
 
     @Override
-    public void submitTestSheet() {
-
+    public void saveSheetQuestionAnswer(int questionId, int sheetId, String answer) {
+        sheetDAOImpl.saveSheetQuestionAnswer(questionId, sheetId, answer);
     }
 
     @Override
-    public List<Test> getMarkListForStudent(int studentId) {
-        return null;
+    public void submitTestSheet(Sheet sheet) {
+        sheetDAOImpl.submitTestSheet(sheet);
     }
 
     @Override
-    public Test getMarkSheetByTestIdForStudent(int testId, int studentId) {
-        return null;
+    public List<Sheet> getMarkListByStudentId(int studentId) {
+        return sheetDAOImpl.getMarkListByStudentId(studentId);
     }
+
+
+    @Override
+    public Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId) {
+
+        return sheetDAOImpl.getMarkSheetByTestIdAndStudentId(testId, studentId);
+    }
+
+
 }

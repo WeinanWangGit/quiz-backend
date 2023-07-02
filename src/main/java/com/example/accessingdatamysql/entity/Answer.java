@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
-public class Sheet {
+public class Answer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
@@ -18,23 +18,17 @@ public class Sheet {
     @Column(name = "update_time")
     private Timestamp updateTime;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
+    @Column(name = "question_id")
+    private int questionId;
 
-    @ManyToOne
-    @JoinColumn(name = "test_id")
-    private Test test;
-
+    @Column(name = "sheet_id")
+    private int sheetId;
 
     private double score;
+
+    private String context;
 
     @Column(name = "is_marked")
     private boolean isMarked;
 
-    @Column(name = "begin_time")
-    private Timestamp beginTime;
-
-    @Column(name = "submit_time")
-    private Timestamp submitTime;
 }

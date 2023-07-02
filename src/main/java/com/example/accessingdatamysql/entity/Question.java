@@ -34,6 +34,8 @@ public class Question {
 
     private double score;
 
-    @Column(name = "teacher_id")
-    private int teacherId;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 }
