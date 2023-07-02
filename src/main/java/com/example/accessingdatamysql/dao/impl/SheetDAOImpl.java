@@ -23,7 +23,7 @@ public class SheetDAOImpl implements SheetDAO {
     @Override
     public List<Sheet> getSheetListByStudentId(int studentId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s.test FROM Sheet s WHERE s.studentId = :studentId",
+                "SELECT s.test FROM Sheet s WHERE s.student.id = :studentId",
                 Sheet.class);
         query.setParameter("studentId", studentId);
         return query.getResultList();
@@ -32,7 +32,7 @@ public class SheetDAOImpl implements SheetDAO {
     @Override
     public Sheet getSheetByTestIdAndStudentId(int testId, int studentId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s.test FROM Sheet s WHERE s.test.id = :testId AND s.studentId = :studentId",
+                "SELECT s.test FROM Sheet s WHERE s.test.id = :testId AND s.student.id = :studentId",
                 Sheet.class);
         query.setParameter("testId", testId);
         query.setParameter("studentId", studentId);
@@ -45,7 +45,6 @@ public class SheetDAOImpl implements SheetDAO {
     public void saveSheetQuestionAnswer(int questionId, int sheetId, String answer) {
         Answer newAnswer = new Answer();
         newAnswer.setQuestionId(questionId);
-        newAnswer.setSheetId(sheetId);
         newAnswer.setContext(answer);
         entityManager.persist(newAnswer);
     }
@@ -59,7 +58,7 @@ public class SheetDAOImpl implements SheetDAO {
     @Override
     public Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s.test FROM Sheet s WHERE s.test.id = :testId AND s.studentId = :studentId AND s.submitted = true",
+                "SELECT s.test FROM Sheet s WHERE s.test.id = :testId AND s.student.id = :studentId AND s.isMarked = true",
                 Sheet.class);
         query.setParameter("testId", testId);
         query.setParameter("studentId", studentId);
@@ -69,7 +68,7 @@ public class SheetDAOImpl implements SheetDAO {
     @Override
     public List<Sheet> getMarkListByStudentId(int studentId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s.test FROM Sheet s WHERE s.studentId = :studentId AND s.submitted = true",
+                "SELECT s.test FROM Sheet s WHERE s.student.id = :studentId AND s.isMarked = true",
                 Sheet.class);
         query.setParameter("studentId", studentId);
         return query.getResultList();

@@ -1,20 +1,21 @@
 package com.example.accessingdatamysql.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "teacher")
 public class Teacher {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private String number;
 
-    public Integer getId() {
-        return id;
-    }
+    private String department;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;  // Association mapping with User entity
 }

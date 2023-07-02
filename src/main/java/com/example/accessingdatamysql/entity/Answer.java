@@ -21,8 +21,9 @@ public class Answer {
     @Column(name = "question_id")
     private int questionId;
 
-    @Column(name = "sheet_id")
-    private int sheetId;
+    @ManyToOne
+    @JoinColumn(name = "sheet_id")
+    private Sheet sheet;
 
     private double score;
 

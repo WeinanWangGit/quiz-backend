@@ -29,7 +29,7 @@ public class QuestionDAOImpl implements QuestionDAO {
 
     @Override
     public List<Question> getQuestionListByTeacherId(int teacherId) {
-        String queryStr = "SELECT q FROM Question q WHERE q.teacherId = :teacherId";
+        String queryStr = "SELECT q FROM Question q WHERE q.teacher.id = :teacherId";
         Query query = entityManager.createQuery(queryStr);
         query.setParameter("teacherId", teacherId);
         return query.getResultList();
