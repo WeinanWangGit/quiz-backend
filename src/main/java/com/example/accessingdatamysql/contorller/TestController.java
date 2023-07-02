@@ -1,6 +1,5 @@
 package com.example.accessingdatamysql.contorller;
 
-import com.example.accessingdatamysql.entity.Question;
 import com.example.accessingdatamysql.entity.Test;
 import com.example.accessingdatamysql.service.impl.TestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
