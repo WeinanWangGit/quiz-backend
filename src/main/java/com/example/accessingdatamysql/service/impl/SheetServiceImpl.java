@@ -37,6 +37,9 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     public void submitTestSheet(Sheet sheet) {
+        //todo add face check logic here
+
+
         sheetDAOImpl.submitTestSheet(sheet);
     }
 
@@ -50,6 +53,16 @@ public class SheetServiceImpl implements SheetService {
     public Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId) {
 
         return sheetDAOImpl.getMarkSheetByTestIdAndStudentId(testId, studentId);
+    }
+
+    @Override
+    public Sheet getSheetById(int sheetId) {
+        return sheetDAOImpl.getSheetById(sheetId);
+    }
+
+    @Override
+    public void saveSheet(Sheet sheet) {
+        sheetDAOImpl.saveSheet(sheet);
     }
 
 

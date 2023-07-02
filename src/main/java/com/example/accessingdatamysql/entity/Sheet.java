@@ -37,4 +37,8 @@ public class Sheet {
 
     @Column(name = "submit_time")
     private Timestamp submitTime;
+
+    @Lob
+    @Column(name = "photo", columnDefinition = "BLOB")
+    private byte[] photo;
 }

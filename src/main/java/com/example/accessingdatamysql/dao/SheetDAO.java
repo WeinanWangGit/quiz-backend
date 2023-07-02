@@ -2,6 +2,7 @@ package com.example.accessingdatamysql.dao;
 
 import com.example.accessingdatamysql.entity.Sheet;
 import com.example.accessingdatamysql.entity.Test;
+import com.example.accessingdatamysql.entity.User;
 
 import java.util.List;
 
@@ -17,4 +18,9 @@ public interface SheetDAO {
     Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId);
 
     List<Sheet> getMarkListByStudentId(int studentId);
+
+
+    void saveSheet(Sheet sheet);
+
+    Sheet getSheetById(int sheetId);
 }

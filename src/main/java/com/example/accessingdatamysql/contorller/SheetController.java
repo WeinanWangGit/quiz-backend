@@ -4,7 +4,9 @@ import com.example.accessingdatamysql.entity.Sheet;
 import com.example.accessingdatamysql.service.impl.SheetServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,5 +53,21 @@ public class SheetController {
     public Sheet getMarkSheetByTestIdAndStudentId(@PathVariable int testId, @PathVariable int studentId) {
         return sheetServiceImpl.getMarkSheetByTestIdAndStudentId(testId, studentId);
     }
+
+
+    @PostMapping("/sheet/photo/save/{sheetId}")
+    public void savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photo) {
+        try {
+            Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
+            byte[] photoData = photo.getBytes();
+            sheet.setPhoto(photoData);
+            sheetServiceImpl.saveSheet(sheet);
+        } catch (IOException e) {
+            // Handle the exception appropriately
+        }
+    }
+
+
+
 
 }

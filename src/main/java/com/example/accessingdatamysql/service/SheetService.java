@@ -24,4 +24,8 @@ public interface SheetService {
     List<Sheet> getMarkListByStudentId(int studentId);
 
     Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId);
+
+    Sheet getSheetById(int sheetId);
+
+    void saveSheet(Sheet sheet);
 }

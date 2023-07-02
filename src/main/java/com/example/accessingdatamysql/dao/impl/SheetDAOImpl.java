@@ -3,6 +3,7 @@ package com.example.accessingdatamysql.dao.impl;
 import com.example.accessingdatamysql.dao.SheetDAO;
 import com.example.accessingdatamysql.entity.Answer;
 import com.example.accessingdatamysql.entity.Sheet;
+import com.example.accessingdatamysql.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,4 +74,16 @@ public class SheetDAOImpl implements SheetDAO {
         query.setParameter("studentId", studentId);
         return query.getResultList();
     }
+
+    @Override
+    public void saveSheet(Sheet sheet) {
+        entityManager.persist(sheet);
+    }
+
+    @Override
+    public Sheet getSheetById(int sheetId) {
+        return entityManager.find(Sheet.class, sheetId);
+    }
+
+
 }
