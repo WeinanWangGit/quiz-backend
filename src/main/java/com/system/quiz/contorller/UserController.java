@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -21,6 +22,30 @@ public class UserController {
         this.userServiceImpl = userServiceImpl;
     }
 
+
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody Map<String, String> requestBody) {
+        String googleId = requestBody.get("sub");
+        String email = requestBody.get("email");
+        String name = requestBody.get("name");
+
+
+        User user = userServiceImpl.findByGoogleId(googleId);
+
+        if (user!=null) {
+            return ResponseEntity.ok(user);
+        } else {
+            // If user does not exist, create a new user and save it
+            User newUser = new User();
+            newUser.setGoogleId(googleId);
+            newUser.setUsername(name);
+            newUser.setEmail(email);
+            userServiceImpl.saveUser(newUser);
+
+            return ResponseEntity.ok(newUser);
+        }
+    }
 
 
 

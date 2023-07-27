@@ -5,11 +5,11 @@ import com.system.quiz.entity.Test;
 import java.util.List;
 
 public interface TestService {
-    void createTest(Test test);
+    Test createTest(Test test);
 
-    void editTest(Test test);
+    Test editTest(Test test);
 
-    void setTestSettings(Test test);
+    Test setTestSettings(Test test);
 
     List<Test> getTestListByTeacherId(int teacherId);
 

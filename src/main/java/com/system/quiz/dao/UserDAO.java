@@ -8,4 +8,6 @@ public interface UserDAO {
      User getUserById(Integer userId);
 
      User getUserByUsername(String username);
+
+    User getUserByGoogleId(String googleId);
 }

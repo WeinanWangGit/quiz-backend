@@ -27,4 +27,9 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Integer userId) {
         return userDAOImpl.getUserById(userId);
     }
+
+    @Override
+    public User findByGoogleId(String googleId) {
+        return userDAOImpl.getUserByGoogleId(googleId);
+    }
 }

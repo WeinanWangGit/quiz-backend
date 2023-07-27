@@ -9,4 +9,6 @@ public interface UserService {
     void saveUser(User user);
 
     User getUserById(Integer userId);
+
+    User findByGoogleId(String googleId);
 }

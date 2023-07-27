@@ -33,6 +33,13 @@ public class UserDAOImpl implements UserDAO {
         return query.getResultList().stream().findFirst().orElse(null);
     }
 
+    @Override
+    public User getUserByGoogleId(String googleId) {
+        TypedQuery<User> query = entityManager.createQuery(
+                "SELECT u FROM User u WHERE u.googleId = :googleId", User.class);
+        query.setParameter("googleId", googleId);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
 
 
 }

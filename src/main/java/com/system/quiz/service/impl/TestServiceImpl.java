@@ -25,19 +25,19 @@ public class TestServiceImpl implements TestService {
     }
     @Override
     @Transactional
-    public void createTest(Test test) {
-         testDAOImpl.createTest(test);
+    public Test createTest(Test test) {
+         return testDAOImpl.createTest(test);
     }
 
     @Override
     @Transactional
-    public void editTest(Test test) {
-         testDAOImpl.editTest(test);
+    public Test editTest(Test test) {
+         return testDAOImpl.editTest(test);
     }
 
     @Override
-    public void setTestSettings(Test test) {
-         testDAOImpl.setTestSettings(test);
+    public Test setTestSettings(Test test) {
+         return testDAOImpl.setTestSettings(test);
     }
 
     @Override

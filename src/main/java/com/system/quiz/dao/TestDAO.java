@@ -7,11 +7,11 @@ import java.util.List;
 public interface TestDAO {
     List<Test> getTestListByTeacherId(int teacherId);
 
-    void setTestSettings(Test test);
+    Test setTestSettings(Test test);
 
-    void editTest(Test test);
+    Test editTest(Test test);
 
-    void createTest(Test test);
+    Test createTest(Test test);
 
     List<Test> findAll();
 

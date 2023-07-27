@@ -29,18 +29,21 @@ public class TestDAOImpl implements TestDAO {
     }
 
     @Override
-    public void setTestSettings(Test test) {
+    public Test setTestSettings(Test test) {
         entityManager.merge(test);
+        return test;
     }
 
     @Override
-    public void editTest(Test test) {
+    public Test editTest(Test test) {
         entityManager.merge(test);
+        return test;
     }
 
     @Override
-    public void createTest(Test test) {
-        entityManager.persist(test);
+    public Test createTest(Test test) {
+         entityManager.persist(test);
+         return test;
     }
 
     @Override
