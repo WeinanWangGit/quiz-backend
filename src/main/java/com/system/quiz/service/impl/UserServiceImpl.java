@@ -5,6 +5,7 @@ import com.system.quiz.entity.User;
 import com.system.quiz.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,5 +32,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByGoogleId(String googleId) {
         return userDAOImpl.getUserByGoogleId(googleId);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        User user = userDAOImpl.findByEmail(email);
+        if(user == null){
+            throw new UsernameNotFoundException("User not fond");
+        }
+        return user;
     }
 }

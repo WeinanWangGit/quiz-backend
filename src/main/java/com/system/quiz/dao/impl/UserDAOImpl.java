@@ -41,5 +41,13 @@ public class UserDAOImpl implements UserDAO {
         return query.getResultList().stream().findFirst().orElse(null);
     }
 
+    @Override
+    public User findByEmail(String email) {
+        TypedQuery<User> query = entityManager.createQuery(
+                "SELECT u FROM User u WHERE u.email = :email", User.class);
+        query.setParameter("email", email);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
 
 }

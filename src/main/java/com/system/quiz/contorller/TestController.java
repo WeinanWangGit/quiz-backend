@@ -16,6 +16,11 @@ public class TestController {
 
     private TestServiceImpl testServiceImpl;
 
+    @GetMapping("/hello")
+    public String Hello() {
+        return "Hello";
+    }
+
     @Autowired
     public TestController(TestServiceImpl testServiceImpl) {
         this.testServiceImpl = testServiceImpl;

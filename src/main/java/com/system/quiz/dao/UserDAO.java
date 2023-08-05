@@ -10,4 +10,6 @@ public interface UserDAO {
      User getUserByUsername(String username);
 
     User getUserByGoogleId(String googleId);
+
+    User findByEmail(String email);
 }

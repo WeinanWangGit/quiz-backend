@@ -11,4 +11,6 @@ public interface UserService {
     User getUserById(Integer userId);
 
     User findByGoogleId(String googleId);
+
+    User findByEmail(String email);
 }
