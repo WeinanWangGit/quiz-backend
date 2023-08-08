@@ -21,6 +21,11 @@ public class TestController {
         return "Hello";
     }
 
+    @PostMapping("/post")
+    public String PostTest() {
+        return "Hello";
+    }
+
     @Autowired
     public TestController(TestServiceImpl testServiceImpl) {
         this.testServiceImpl = testServiceImpl;
