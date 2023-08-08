@@ -1,6 +1,7 @@
 package com.system.quiz.service;
 
 import com.system.quiz.entity.Sheet;
+import com.system.quiz.entity.SheetDTO;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface SheetService {
 
 
 
-    List<Sheet> getSheetListByStudentId(int studentId);
+    List<SheetDTO> getSheetDTOListByStudentId(int studentId);
 
     Sheet getSheetByTestIdAndStudentId(int testId, int studentId);
 

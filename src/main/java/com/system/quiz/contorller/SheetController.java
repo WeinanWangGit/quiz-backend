@@ -1,8 +1,12 @@
 package com.system.quiz.contorller;
 
 import com.system.quiz.entity.Sheet;
+import com.system.quiz.entity.SheetDTO;
+import com.system.quiz.exception.ApiResponse;
 import com.system.quiz.service.impl.SheetServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/")
 public class SheetController {
 
     private SheetServiceImpl sheetServiceImpl;
@@ -21,11 +25,14 @@ public class SheetController {
     }
 
 
-
-
+    /**
+     * get test list of sheet list
+     * @param studentId
+     * @return
+     */
     @GetMapping("/sheet/list/{studentId}")
-    public List<Sheet> getSheetListByStudentId(@PathVariable int studentId) {
-        return sheetServiceImpl.getSheetListByStudentId(studentId);
+    public List<SheetDTO> getSheetListByStudentId(@PathVariable int studentId) {
+        return sheetServiceImpl.getSheetDTOListByStudentId(studentId);
     }
 
     @GetMapping("/sheet/{testId}&{studentId}")
@@ -56,17 +63,19 @@ public class SheetController {
 
 
     @PostMapping("/sheet/photo/save/{sheetId}")
-    public void savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photo) {
+    public ResponseEntity<ApiResponse<String>> savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photo) {
         try {
             Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
             byte[] photoData = photo.getBytes();
             sheet.setPhoto(photoData);
             sheetServiceImpl.saveSheet(sheet);
+            ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.value(), "Sheet photo save success", null);
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
-            // Handle the exception appropriately
+            ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "photo save fail", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
-
 
 
 

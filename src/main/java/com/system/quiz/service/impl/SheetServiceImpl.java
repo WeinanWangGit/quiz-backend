@@ -2,7 +2,9 @@ package com.system.quiz.service.impl;
 
 import com.system.quiz.dao.impl.SheetDAOImpl;
 import com.system.quiz.entity.Sheet;
+import com.system.quiz.entity.SheetDTO;
 import com.system.quiz.service.SheetService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,9 @@ public class SheetServiceImpl implements SheetService {
         this.sheetDAOImpl = sheetDAOImpl;
     }
     @Override
-    public List<Sheet> getSheetListByStudentId(int studentId) {
+    public List<SheetDTO> getSheetDTOListByStudentId(int studentId) {
 
-        return sheetDAOImpl.getSheetListByStudentId(studentId);
+        return sheetDAOImpl.getSheetDTOListByStudentId(studentId);
     }
 
     @Override
@@ -64,6 +66,7 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
+    @Transactional
     public void saveSheet(Sheet sheet) {
         sheetDAOImpl.saveSheet(sheet);
     }
