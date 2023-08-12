@@ -1,5 +1,6 @@
 package com.system.quiz.config;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.system.quiz.service.JwtService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,15 +24,15 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String token = (String) authentication.getCredentials();
+        GoogleIdToken idToken = (GoogleIdToken) authentication.getCredentials();
 
-        String userEmail = jwtService.extractUserName(token);
+        String userEmail = jwtService.extractEmailFromToken(idToken);
 
         if (userEmail != null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-            if (jwtService.isTokenValid(token, userDetails)) {
-                return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+            if (jwtService.isTokenMatchUser(idToken, userDetails)) {
+                return new UsernamePasswordAuthenticationToken(userDetails, idToken, userDetails.getAuthorities());
             }
         }
 

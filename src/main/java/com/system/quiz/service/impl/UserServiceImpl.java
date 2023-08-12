@@ -1,15 +1,20 @@
 package com.system.quiz.service.impl;
 
+import com.system.quiz.config.JwtAuthenticationFilter;
 import com.system.quiz.dao.impl.UserDAOImpl;
 import com.system.quiz.entity.User;
 import com.system.quiz.service.UserService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private UserDAOImpl userDAOImpl;
 
@@ -38,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         User user = userDAOImpl.findByEmail(email);
         if(user == null){
-            throw new UsernameNotFoundException("User not fond");
+            logger.info("User not fond");
         }
         return user;
     }

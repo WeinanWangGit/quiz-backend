@@ -37,6 +37,10 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    /**
+     * using email as union sign
+     * @return
+     */
     @Override
     public String getUsername() {
         return email;
