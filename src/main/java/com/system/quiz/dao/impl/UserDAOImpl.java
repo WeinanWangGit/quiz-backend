@@ -1,6 +1,8 @@
 package com.system.quiz.dao.impl;
 
 import com.system.quiz.dao.UserDAO;
+import com.system.quiz.entity.Student;
+import com.system.quiz.entity.Teacher;
 import com.system.quiz.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -40,6 +42,41 @@ public class UserDAOImpl implements UserDAO {
         query.setParameter("googleId", googleId);
         return query.getResultList().stream().findFirst().orElse(null);
     }
+
+    @Override
+    public User findByEmail(String email) {
+        TypedQuery<User> query = entityManager.createQuery(
+                "SELECT u FROM User u WHERE u.email = :email", User.class);
+        query.setParameter("email", email);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public void saveStudent(Student student) {
+        entityManager.persist(student);
+    }
+
+    @Override
+    public void saveTeacher(Teacher teacher) {
+        entityManager.persist(teacher);
+    }
+
+    @Override
+    public Student getStudentByUserId(Integer userId) {
+        TypedQuery<Student> query = entityManager.createQuery(
+                "SELECT s FROM Student s WHERE s.user.id = :userId", Student.class);
+        query.setParameter("userId", userId);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public Teacher getTeacherByUserId(Integer userId) {
+        TypedQuery<Teacher> query = entityManager.createQuery(
+                "SELECT t FROM Teacher t WHERE t.user.id = :userId", Teacher.class);
+        query.setParameter("userId", userId);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
 
 
 }
