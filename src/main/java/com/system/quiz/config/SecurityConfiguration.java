@@ -48,6 +48,9 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    //to show the error message instead just 403
+//    .exceptionHandling()
+//                .accessDeniedHandler(accessDeniedHandler);
 
 
 

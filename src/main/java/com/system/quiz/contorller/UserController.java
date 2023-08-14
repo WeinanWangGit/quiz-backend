@@ -1,8 +1,6 @@
 package com.system.quiz.contorller;
 
-import com.system.quiz.entity.LoginResponseDTO;
-import com.system.quiz.entity.Role;
-import com.system.quiz.entity.User;
+import com.system.quiz.entity.*;
 import com.system.quiz.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,7 +49,7 @@ public class UserController {
 
     private LoginResponseDTO createLoginResponse(User user) {
         LoginResponseDTO responseDTO = new LoginResponseDTO();
-        responseDTO.setId(String.valueOf(user.getId()));
+        responseDTO.setId(user.getId());
         responseDTO.setUsername(user.getUsername());
         responseDTO.setEmail(user.getEmail());
         responseDTO.setRole(String.valueOf(user.getRole()));
@@ -62,16 +60,37 @@ public class UserController {
 
 
     @PostMapping("/role/{userId}")
-    public ResponseEntity<LoginResponseDTO> setUserRoleById(@PathVariable("userId") Integer userId, @RequestParam("role") String role) {
+    public ResponseEntity<LoginResponseDTO> setUserRoleById(@RequestBody Map<String, String> requestBody, @PathVariable("userId") Integer userId) {
+        String role = requestBody.get("role");
+        String number = requestBody.get("number");
+        String department = requestBody.get("department");
+        String major = requestBody.get("major");
+
         User user = userServiceImpl.getUserById(userId);
+
         user.setRole(Role.valueOf(role));
+
         userServiceImpl.saveUser(user);
+
+        if(role.equals("STUDENT")){
+            Student student = new Student();
+            student.setNumber(number);
+            student.setMajor(major);
+            student.setDepartment(department);
+            student.setUser(user);
+            userServiceImpl.saveStudent(student);
+
+        } else if (role.equals("TEACHER")) {
+            Teacher teacher = new Teacher();
+            teacher.setNumber(number);
+            teacher.setDepartment(department);
+            teacher.setUser(user);
+            userServiceImpl.saveTeacher(teacher);
+
+        }
         return ResponseEntity.ok(createLoginResponse(user));
 
     }
-
-
-
 
 
 
@@ -86,14 +105,35 @@ public class UserController {
         }
     }
 
-    @PostMapping("/avatar")
-    public ResponseEntity<String> uploadAvatar(@RequestParam("avatar") MultipartFile avatarFile, Integer userId) {
+
+
+    @GetMapping("/info/{userId}")
+    public ResponseEntity<UserDTO> getCurrentUserInfoById(@PathVariable("userId") Integer userId) {
+        UserDTO userDTO = userServiceImpl.getCurrentUserInfoById(userId);
+
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    @PostMapping("/avatar/{userId}")
+    public ResponseEntity<String> uploadAvatar(@RequestParam("avatar") MultipartFile avatarFile, @PathVariable("userId") Integer userId) {
         // Validate the avatar file
         if (avatarFile.isEmpty()) {
             return ResponseEntity.badRequest().body("Avatar file is required");
         }
 
-        // Get the current user (assuming you have a way to determine the current user)
         User currentUser = userServiceImpl.getUserById(userId);
 
         try {
@@ -108,6 +148,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload avatar");
         }
     }
+
+
+
+
+
+
+
 
 
 }

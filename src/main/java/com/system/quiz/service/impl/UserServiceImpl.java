@@ -2,13 +2,15 @@ package com.system.quiz.service.impl;
 
 import com.system.quiz.config.JwtAuthenticationFilter;
 import com.system.quiz.dao.impl.UserDAOImpl;
+import com.system.quiz.entity.Student;
+import com.system.quiz.entity.Teacher;
 import com.system.quiz.entity.User;
+import com.system.quiz.entity.UserDTO;
 import com.system.quiz.service.UserService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,5 +48,50 @@ public class UserServiceImpl implements UserService {
             logger.info("User not fond");
         }
         return user;
+    }
+
+    @Override
+    @Transactional
+    public void saveTeacher(Teacher teacher) {
+        userDAOImpl.saveTeacher(teacher);
+    }
+
+    @Override
+    @Transactional
+    public void saveStudent(Student student) {
+       userDAOImpl.saveStudent(student);
+    }
+
+    @Override
+    public UserDTO getCurrentUserInfoById(Integer userId) {
+        UserDTO userDTO = new UserDTO();
+        String number = "";
+        String major = "";
+        String department = "";
+
+        User user = userDAOImpl.getUserById(userId);
+        if(user!=null){
+            userDTO.setId(user.getId());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setUsername(user.getUsername());
+            String role = user.getRole().name();
+            userDTO.setRole(role);
+            if(role.equals("STUDENT")){
+                Student student = userDAOImpl.getStudentByUserId(userId);
+                 number = student.getNumber();
+                 major = student.getMajor();
+                 department = student.getDepartment();
+            }else if(role.equals("TEACHER")){
+                Teacher teacher = userDAOImpl.getTeacherByUserId(userId);
+                number = teacher.getNumber();
+                department = teacher.getDepartment();
+            }
+            userDTO.setNumber(number);
+            userDTO.setDepartment(department);
+            userDTO.setMajor(major);
+        }
+
+        return userDTO;
+
     }
 }

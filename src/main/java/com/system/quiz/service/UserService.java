@@ -1,6 +1,9 @@
 package com.system.quiz.service;
 
+import com.system.quiz.entity.Student;
+import com.system.quiz.entity.Teacher;
 import com.system.quiz.entity.User;
+import com.system.quiz.entity.UserDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,4 +16,10 @@ public interface UserService {
     User findByGoogleId(String googleId);
 
     User findByEmail(String email);
+
+    void saveTeacher(Teacher teacher);
+
+    void saveStudent(Student student);
+
+    UserDTO getCurrentUserInfoById(Integer userId);
 }
