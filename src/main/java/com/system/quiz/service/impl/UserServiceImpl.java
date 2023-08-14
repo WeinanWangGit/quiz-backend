@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setUsername(user.getUsername());
             String role = user.getRole().name();
             userDTO.setRole(role);
+            userDTO.setAvatar(user.getAvatar());
             if(role.equals("STUDENT")){
                 Student student = userDAOImpl.getStudentByUserId(userId);
                  number = student.getNumber();
