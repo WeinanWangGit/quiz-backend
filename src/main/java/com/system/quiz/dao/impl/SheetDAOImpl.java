@@ -3,11 +3,15 @@ package com.system.quiz.dao.impl;
 import com.system.quiz.dao.SheetDAO;
 import com.system.quiz.entity.Answer;
 import com.system.quiz.entity.Sheet;
+import com.system.quiz.entity.Student;
+import com.system.quiz.entity.Test;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -91,6 +95,24 @@ public class SheetDAOImpl implements SheetDAO {
                 Sheet.class);
         query.setParameter("testId", testId);
         return query.getResultList();
+    }
+
+    @Override
+    public void generateSheet(Integer testId, ArrayList<Integer> studentIds) {
+        Test test = entityManager.find(Test.class, testId);
+
+        for (Integer studentId : studentIds) {
+            Student student = entityManager.find(Student.class, studentId);
+
+            Sheet sheet = new Sheet();
+            sheet.setTest(test);
+            sheet.setStudent(student);
+            sheet.setCreateTime(new Timestamp(System.currentTimeMillis()));
+            sheet.setUpdateTime(sheet.getCreateTime());
+            sheet.setMarked(false);
+
+            entityManager.persist(sheet);
+        }
     }
 
 

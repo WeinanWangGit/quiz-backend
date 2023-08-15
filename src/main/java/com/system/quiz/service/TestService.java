@@ -3,9 +3,10 @@ package com.system.quiz.service;
 import com.system.quiz.entity.Test;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TestService {
-    Test createTest(Test test);
+    Test createTest(Test test, Map<String, String> takerMap);
 
     Test editTest(Test test);
 

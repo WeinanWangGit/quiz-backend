@@ -2,6 +2,7 @@ package com.system.quiz.service.impl;
 
 import com.system.quiz.dao.impl.QuestionDAOImpl;
 import com.system.quiz.entity.Question;
+import com.system.quiz.entity.QuestionDTO;
 import com.system.quiz.service.QuestionService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> getQuestionListByTeacherId(int teacherId) {
+    public List<QuestionDTO> getQuestionListByTeacherId(int teacherId) {
         return questionDAOImpl.getQuestionListByTeacherId(teacherId);
     }
 

@@ -29,6 +29,9 @@ public class Test {
 
     private String time;
 
+    @Column(name = "timer")
+    private boolean timer;
+
     @Column(name = "complete_type")
     private String completeType;
 
@@ -48,7 +51,7 @@ public class Test {
     private String answerShowModel;
 
     @Column(name = "teacher_id")
-    private int teacherId;
+    private Integer teacherId;
 
     @ManyToMany
     @JoinTable(

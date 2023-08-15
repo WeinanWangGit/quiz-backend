@@ -4,6 +4,8 @@ import com.system.quiz.entity.Student;
 import com.system.quiz.entity.Teacher;
 import com.system.quiz.entity.User;
 
+import java.util.ArrayList;
+
 public interface UserDAO {
      void saveUser(User user);
 
@@ -22,4 +24,6 @@ public interface UserDAO {
     Student getStudentByUserId(Integer userId);
 
     Teacher getTeacherByUserId(Integer userId);
+
+    ArrayList<Integer> getStudentIdListByDapartAndMajor(String department, String[] majorArray);
 }

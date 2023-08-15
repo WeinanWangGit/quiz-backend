@@ -1,13 +1,14 @@
 package com.system.quiz.service;
 
 import com.system.quiz.entity.Question;
+import com.system.quiz.entity.QuestionDTO;
 
 import java.util.List;
 
 public interface QuestionService {
     List<Question> findAll();
 
-    List<Question> getQuestionListByTeacherId(int teacherId);
+    List<QuestionDTO> getQuestionListByTeacherId(int teacherId);
 
     void addQuestionToTest(int testId, Question question);
 
