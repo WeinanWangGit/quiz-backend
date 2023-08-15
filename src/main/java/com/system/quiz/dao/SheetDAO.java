@@ -3,6 +3,7 @@ package com.system.quiz.dao;
 import com.system.quiz.entity.Sheet;
 import com.system.quiz.entity.SheetDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface SheetDAO {
@@ -24,4 +25,6 @@ public interface SheetDAO {
     Sheet getSheetById(int sheetId);
 
     List<Sheet> getSheetByTestId(int testId);
+
+    void generateSheet(Integer testId, ArrayList<Integer> studentIds);
 }

@@ -1,6 +1,7 @@
 package com.system.quiz.contorller;
 
 import com.system.quiz.entity.Question;
+import com.system.quiz.entity.QuestionDTO;
 import com.system.quiz.service.impl.QuestionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,7 @@ public class QuestionController {
 
 
     @GetMapping("/question/list/{teacherId}")
-    public List<Question> getQuestionListByTeacherId(@PathVariable int teacherId) {
-        System.out.println(teacherId);
+    public List<QuestionDTO> getQuestionListByTeacherId(@PathVariable int teacherId) {
         return questionServiceImpl.getQuestionListByTeacherId(teacherId);
     }
 

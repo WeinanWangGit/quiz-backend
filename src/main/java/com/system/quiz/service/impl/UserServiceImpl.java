@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService {
         String number = "";
         String major = "";
         String department = "";
+        Integer roleId = -1;
 
         User user = userDAOImpl.getUserById(userId);
         if(user!=null){
@@ -82,14 +83,17 @@ public class UserServiceImpl implements UserService {
                  number = student.getNumber();
                  major = student.getMajor();
                  department = student.getDepartment();
+                 roleId = student.getId();
             }else if(role.equals("TEACHER")){
                 Teacher teacher = userDAOImpl.getTeacherByUserId(userId);
                 number = teacher.getNumber();
                 department = teacher.getDepartment();
+                roleId = teacher.getId();
             }
             userDTO.setNumber(number);
             userDTO.setDepartment(department);
             userDTO.setMajor(major);
+            userDTO.setRoleId(roleId);
         }
 
         return userDTO;

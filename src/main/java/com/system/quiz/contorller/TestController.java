@@ -1,5 +1,6 @@
 package com.system.quiz.contorller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.system.quiz.entity.Test;
 import com.system.quiz.exception.ApiResponse;
 import com.system.quiz.service.impl.TestServiceImpl;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -35,8 +37,12 @@ public class TestController {
     }
 
     @PostMapping("/test/create")
-    public ResponseEntity<ApiResponse<Test>> createTest(@RequestBody Test test) {
-        Test createdTest = testServiceImpl.createTest(test);
+    public ResponseEntity<ApiResponse<Test>> createTest(@RequestBody Map<String, Object>  requestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Test test = objectMapper.convertValue(requestBody.get("test"), Test.class);
+        Map<String, String> takerMap = (Map<String, String>) requestBody.get("taker");
+
+        Test createdTest = testServiceImpl.createTest(test, takerMap);
         ApiResponse<Test> response = new ApiResponse<>(HttpStatus.OK.value(), "Test created successfully.", createdTest);
         return ResponseEntity.ok(response);
     }
