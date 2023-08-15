@@ -8,6 +8,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Repository
 public class UserDAOImpl implements UserDAO {
 
@@ -75,6 +78,22 @@ public class UserDAOImpl implements UserDAO {
                 "SELECT t FROM Teacher t WHERE t.user.id = :userId", Teacher.class);
         query.setParameter("userId", userId);
         return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public ArrayList<Integer> getStudentIdListByDapartAndMajor(String department, String[] majorArray) {
+        if (majorArray == null || majorArray.length == 0) {
+            TypedQuery<Integer> query = entityManager.createQuery(
+                    "SELECT s.id FROM Student s WHERE s.department = :department", Integer.class);
+            query.setParameter("department", department);
+            return new ArrayList<>(query.getResultList());
+        } else {
+            TypedQuery<Integer> query = entityManager.createQuery(
+                    "SELECT s.id FROM Student s WHERE s.department = :department AND s.major IN :majorList", Integer.class);
+            query.setParameter("department", department);
+            query.setParameter("majorList", Arrays.asList(majorArray));
+            return new ArrayList<>(query.getResultList());
+        }
     }
 
 
