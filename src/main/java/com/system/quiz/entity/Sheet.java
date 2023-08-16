@@ -41,4 +41,6 @@ public class Sheet {
     @Lob
     @Column(name = "photo", columnDefinition = "BLOB")
     private byte[] photo;
+
+    private Double similarity;
 }

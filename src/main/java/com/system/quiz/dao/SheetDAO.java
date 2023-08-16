@@ -1,5 +1,6 @@
 package com.system.quiz.dao;
 
+import com.system.quiz.entity.MarkDTO;
 import com.system.quiz.entity.Sheet;
 import com.system.quiz.entity.SheetDTO;
 
@@ -27,4 +28,6 @@ public interface SheetDAO {
     List<Sheet> getSheetByTestId(int testId);
 
     void generateSheet(Integer testId, ArrayList<Integer> studentIds);
+
+    List<MarkDTO> getMarkListByTestId(int testId);
 }

@@ -1,16 +1,12 @@
 package com.system.quiz.entity;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Timestamp;
-
 @Data
-public class SheetDTO {
-
+public class MarkDTO {
     private Integer id;
 
-    private Student studentId;
+    private Integer studentId;
 
     private TestDTO test;
 

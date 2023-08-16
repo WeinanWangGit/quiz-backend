@@ -1,5 +1,6 @@
 package com.system.quiz.contorller;
 
+import com.system.quiz.entity.MarkDTO;
 import com.system.quiz.entity.Sheet;
 import com.system.quiz.entity.SheetDTO;
 import com.system.quiz.exception.ApiResponse;
@@ -51,9 +52,15 @@ public class SheetController {
     }
 
 
-    @GetMapping("/mark/list/{studentId}")
+    @GetMapping("/mark/list/student/{studentId}")
     public List<Sheet> getMarkListByStudentId(@PathVariable int studentId) {
         return sheetServiceImpl.getMarkListByStudentId(studentId);
+    }
+
+
+    @GetMapping("/mark/list/test/{testId}")
+    public List<MarkDTO> getMarkListByTestId(@PathVariable int testId) {
+        return sheetServiceImpl.getMarkListByTestId(testId);
     }
 
     @GetMapping("/mark/{testId}&{studentId}")

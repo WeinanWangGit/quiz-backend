@@ -1,5 +1,6 @@
 package com.system.quiz.service;
 
+import com.system.quiz.entity.MarkDTO;
 import com.system.quiz.entity.Sheet;
 import com.system.quiz.entity.SheetDTO;
 
@@ -28,4 +29,6 @@ public interface SheetService {
     Sheet getSheetById(int sheetId);
 
     void saveSheet(Sheet sheet);
+
+    List<MarkDTO> getMarkListByTestId(int testId);
 }

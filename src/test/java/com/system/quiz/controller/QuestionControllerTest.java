@@ -62,7 +62,7 @@ public class QuestionControllerTest {
         List<Question> questionList = Arrays.asList(question1, question2);
 
         // Mock the service method
-        Mockito.when(questionService.getQuestionListByTeacherId(teacherId)).thenReturn(questionList);
+//        Mockito.when(questionService.getQuestionListByTeacherId(teacherId)).thenReturn(questionList);
 
         // Perform GET request
         mockMvc.perform(MockMvcRequestBuilders.get("/question/list/{teacherId}", teacherId))
