@@ -39,6 +39,9 @@ public class SecurityConfiguration {
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth ->{
                             auth.requestMatchers("/user/login").permitAll();
+//                            auth.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN");
+//                            auth.requestMatchers("/teacher/**").hasAnyRole("TEACHER", "ADMIN");
+//                            auth.requestMatchers("/auth/**").hasRole("ADMIN");
                             auth.anyRequest().authenticated();
                         })
                 .sessionManagement((session) -> session
@@ -47,6 +50,10 @@ public class SecurityConfiguration {
                 .authenticationProvider(jwtAuthenticationProvider);
         return http.build();
     }
+
+
+
+
 
     //to show the error message instead just 403
 //    .exceptionHandling()
