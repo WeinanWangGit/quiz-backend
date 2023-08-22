@@ -1,5 +1,6 @@
 package com.system.quiz.contorller;
 
+import com.system.quiz.entity.Answer;
 import com.system.quiz.entity.MarkDTO;
 import com.system.quiz.entity.Sheet;
 import com.system.quiz.entity.SheetDTO;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -36,19 +38,45 @@ public class SheetController {
         return sheetServiceImpl.getSheetDTOListByStudentId(studentId);
     }
 
-    @GetMapping("/sheet/{testId}&{studentId}")
+    @GetMapping("/sheet/{testId}/{studentId}")
     public Sheet getSheetByTestIdAndStudentId(@PathVariable int testId, @PathVariable int studentId) {
         return sheetServiceImpl.getSheetByTestIdAndStudentId(testId, studentId);
     }
 
-    @PostMapping("/sheet/question/save/{questionId}&{sheetId}")
-    public void saveSheetQuestionAnswer(@PathVariable int questionId, @PathVariable int sheetId, String answer) {
-        sheetServiceImpl.saveSheetQuestionAnswer(questionId, sheetId, answer);
+    @GetMapping("/sheet/{sheetId}")
+    public SheetDTO getSheetDTOById(@PathVariable int sheetId) {
+        return sheetServiceImpl.getSheetDTOById(sheetId);
     }
 
-    @PostMapping("/sheet/submission")
-    public void submitTestSheet(Sheet sheet) {
-        sheetServiceImpl.submitTestSheet(sheet);
+    @PostMapping("/sheet/answer/save/{questionId}/{sheetId}")
+    public ResponseEntity<ApiResponse<Answer>> saveSheetQuestionAnswer(@PathVariable int questionId, @PathVariable int sheetId, @RequestBody Answer answer) {
+        try {
+            Answer saved = sheetServiceImpl.saveSheetQuestionAnswer(questionId, sheetId, answer);
+            ApiResponse<Answer> response = new ApiResponse<>(HttpStatus.OK.value(), "Answer saved successfully", saved);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<Answer> response = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error saving answer", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+    @PostMapping("/sheet/submit/{sheetId}")
+    public ResponseEntity<ApiResponse<SheetDTO>> submitTestSheet(@PathVariable int sheetId, @RequestParam("startTime") Long startTimeMillis) {
+        try {
+            // Convert the received timestamp to java.sql.Timestamp
+            Timestamp startTime = new Timestamp(startTimeMillis);
+
+            Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
+
+            SheetDTO sheetDTO = sheetServiceImpl.submitTestSheet(sheet, startTime);
+
+            ApiResponse<SheetDTO> response = new ApiResponse<>(HttpStatus.OK.value(), "Test sheet submitted successfully", sheetDTO);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<SheetDTO> response = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error submitting test sheet", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
 
@@ -63,10 +91,17 @@ public class SheetController {
         return sheetServiceImpl.getMarkListByTestId(testId);
     }
 
-    @GetMapping("/mark/{testId}&{studentId}")
+    @GetMapping("/mark/list/{teacherId}/{testId}")
+    public List<MarkDTO> getMarkListByTeacherIdOrTestId(@PathVariable int teacherId, @PathVariable int testId) {
+        return sheetServiceImpl.getMarkListByTeacherIdOrTestId(teacherId, testId);
+    }
+
+    @GetMapping("/mark/{testId}/{studentId}")
     public Sheet getMarkSheetByTestIdAndStudentId(@PathVariable int testId, @PathVariable int studentId) {
         return sheetServiceImpl.getMarkSheetByTestIdAndStudentId(testId, studentId);
     }
+
+
 
 
     @PostMapping("/sheet/photo/save/{sheetId}")

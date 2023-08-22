@@ -2,6 +2,8 @@ package com.system.quiz.service.impl;
 
 
 import com.system.quiz.dao.impl.SheetDAOImpl;
+import com.system.quiz.dao.impl.TestDAOImpl;
+import com.system.quiz.entity.Answer;
 import com.system.quiz.entity.MarkDTO;
 import com.system.quiz.entity.Sheet;
 import com.system.quiz.entity.SheetDTO;
@@ -16,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,11 +27,13 @@ public class SheetServiceImpl implements SheetService {
 
 
     private SheetDAOImpl sheetDAOImpl;
+    private TestDAOImpl testDAOImpl;
     private static final Logger logger = LoggerFactory.getLogger(SheetServiceImpl.class);
 
     @Autowired
-    public SheetServiceImpl(SheetDAOImpl sheetDAOImpl){
+    public SheetServiceImpl(SheetDAOImpl sheetDAOImpl, TestDAOImpl testDAOImpl){
         this.sheetDAOImpl = sheetDAOImpl;
+        this.testDAOImpl = testDAOImpl;
     }
     @Override
     public List<SheetDTO> getSheetDTOListByStudentId(int studentId) {
@@ -42,17 +48,18 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
-    public void saveSheetQuestionAnswer(int questionId, int sheetId, String answer) {
-        sheetDAOImpl.saveSheetQuestionAnswer(questionId, sheetId, answer);
+    @Transactional
+    public Answer saveSheetQuestionAnswer(int questionId, int sheetId, Answer answer) {
+        return sheetDAOImpl.saveSheetQuestionAnswer(questionId, sheetId, answer);
     }
 
     @Override
-    public void submitTestSheet(Sheet sheet) {
-
-
-
-
-        sheetDAOImpl.submitTestSheet(sheet);
+    @Transactional
+    public SheetDTO submitTestSheet(Sheet sheet, Timestamp startTime) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        sheet.setSubmitTime(currentTimestamp);
+        sheet.setStartTime(startTime);
+        return sheetDAOImpl.submitTestSheet(sheet);
     }
 
     @Override
@@ -129,6 +136,30 @@ public class SheetServiceImpl implements SheetService {
     public List<MarkDTO> getMarkListByTestId(int testId) {
         return sheetDAOImpl.getMarkListByTestId(testId);
     }
+
+    @Override
+    @Transactional
+    public SheetDTO getSheetDTOById(int sheetId) {
+        return sheetDAOImpl.getSheetDTOById(sheetId);
+    }
+
+    /**
+     * if the testId if empty get all testId of the teacherId
+     * @param teacherId
+     * @param testId
+     * @return
+     */
+    @Override
+    public List<MarkDTO> getMarkListByTeacherIdOrTestId(int teacherId, int testId) {
+        if( testId == -1 || testId == 0 || testId < 0){
+           return sheetDAOImpl.getMarkListByTeacherId(teacherId);
+        }else {
+            return sheetDAOImpl.getMarkListByTestId(testId);
+        }
+
+    }
+
+
 
 
     private double calculateSimilarity(Mat face1, Mat face2) {

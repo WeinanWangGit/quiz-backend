@@ -32,8 +32,10 @@ public class Sheet {
     @Column(name = "is_marked")
     private boolean isMarked;
 
-    @Column(name = "begin_time")
-    private Timestamp beginTime;
+
+    //open the sheet time
+    @Column(name = "start_time")
+    private Timestamp startTime;
 
     @Column(name = "submit_time")
     private Timestamp submitTime;

@@ -27,10 +27,16 @@ public class Test {
 
     private String type;
 
-    private String time;
+    private Integer time;
 
     @Column(name = "timer")
     private boolean timer;
+
+    private double score;
+
+    //the time allow to open sheet
+    @Column(name = "begin_time")
+    private Timestamp beginTime;
 
     @Column(name = "complete_type")
     private String completeType;
@@ -60,4 +66,16 @@ public class Test {
             inverseJoinColumns = @JoinColumn(name = "question_id")
     )
     private List<Question> questions = new ArrayList<>();
+
+    public boolean getTimer() {
+        return timer;
+    }
+
+    public void setTimer(boolean timer){
+        this.timer = timer;
+    }
+
+    public boolean isRandomSort() {
+        return randomSort;
+    }
 }

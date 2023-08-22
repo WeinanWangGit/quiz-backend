@@ -1,9 +1,11 @@
 package com.system.quiz.service;
 
+import com.system.quiz.entity.Answer;
 import com.system.quiz.entity.MarkDTO;
 import com.system.quiz.entity.Sheet;
 import com.system.quiz.entity.SheetDTO;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface SheetService {
@@ -16,9 +18,9 @@ public interface SheetService {
 
 
 
-    void saveSheetQuestionAnswer(int questionId, int sheetId, String answer);
+    Answer saveSheetQuestionAnswer(int questionId, int sheetId, Answer answer);
 
-    void submitTestSheet(Sheet sheet);
+    SheetDTO submitTestSheet(Sheet sheet, Timestamp startTime);
 
 
 
@@ -31,4 +33,8 @@ public interface SheetService {
     void saveSheet(Sheet sheet);
 
     List<MarkDTO> getMarkListByTestId(int testId);
+
+    SheetDTO getSheetDTOById(int sheetId);
+
+    List<MarkDTO> getMarkListByTeacherIdOrTestId(int teacherId, int testId);
 }

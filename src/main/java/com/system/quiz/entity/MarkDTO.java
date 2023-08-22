@@ -8,8 +8,16 @@ public class MarkDTO {
 
     private Integer studentId;
 
+    private String studentName;
+
     private TestDTO test;
 
     private Double similarity;
+
+    private double score;
+
+    private String department;
+
+    private String major;
 
 }

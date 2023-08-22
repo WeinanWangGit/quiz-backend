@@ -10,10 +10,18 @@ public class SheetDTO {
 
     private Integer id;
 
-    private Student studentId;
+    private Integer studentId;
 
     private TestDTO test;
 
     private Double similarity;
+
+    private Timestamp startTime;
+
+    private Timestamp submitTime;
+
+    private String studentName;
+
+    private String studentNumber;
 
 }
