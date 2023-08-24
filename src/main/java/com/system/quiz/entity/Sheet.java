@@ -29,6 +29,9 @@ public class Sheet {
 
     private double score;
 
+    @Column(name = "is_submited")
+    private boolean isSubmited;
+
     @Column(name = "is_marked")
     private boolean isMarked;
 

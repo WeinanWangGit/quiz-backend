@@ -3,10 +3,7 @@ package com.system.quiz.service.impl;
 
 import com.system.quiz.dao.impl.SheetDAOImpl;
 import com.system.quiz.dao.impl.TestDAOImpl;
-import com.system.quiz.entity.Answer;
-import com.system.quiz.entity.MarkDTO;
-import com.system.quiz.entity.Sheet;
-import com.system.quiz.entity.SheetDTO;
+import com.system.quiz.entity.*;
 import com.system.quiz.service.SheetService;
 import jakarta.transaction.Transactional;
 import org.opencv.core.*;
@@ -58,6 +55,7 @@ public class SheetServiceImpl implements SheetService {
     public SheetDTO submitTestSheet(Sheet sheet, Timestamp startTime) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         sheet.setSubmitTime(currentTimestamp);
+        sheet.setSubmited(true);
         sheet.setStartTime(startTime);
         return sheetDAOImpl.submitTestSheet(sheet);
     }
@@ -68,16 +66,20 @@ public class SheetServiceImpl implements SheetService {
     }
 
 
-    @Override
-    public Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId) {
 
-        return sheetDAOImpl.getMarkSheetByTestIdAndStudentId(testId, studentId);
-    }
 
     @Override
     public Sheet getSheetById(int sheetId) {
         return sheetDAOImpl.getSheetById(sheetId);
     }
+
+
+    @Override
+    @Transactional
+    public SheetDTO getSheetDTOById(int sheetId) {
+        return sheetDAOImpl.getSheetDTOById(sheetId);
+    }
+
 
 
     @Override
@@ -132,15 +134,16 @@ public class SheetServiceImpl implements SheetService {
 
     }
 
+
     @Override
-    public List<MarkDTO> getMarkListByTestId(int testId) {
-        return sheetDAOImpl.getMarkListByTestId(testId);
+    public Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId) {
+
+        return sheetDAOImpl.getMarkSheetByTestIdAndStudentId(testId, studentId);
     }
 
     @Override
-    @Transactional
-    public SheetDTO getSheetDTOById(int sheetId) {
-        return sheetDAOImpl.getSheetDTOById(sheetId);
+    public List<MarkItemDTO> getMarkListByTestId(int testId) {
+        return sheetDAOImpl.getMarkListByTestId(testId);
     }
 
     /**
@@ -150,7 +153,7 @@ public class SheetServiceImpl implements SheetService {
      * @return
      */
     @Override
-    public List<MarkDTO> getMarkListByTeacherIdOrTestId(int teacherId, int testId) {
+    public List<MarkItemDTO> getMarkListByTeacherIdOrTestId(int teacherId, int testId) {
         if( testId == -1 || testId == 0 || testId < 0){
            return sheetDAOImpl.getMarkListByTeacherId(teacherId);
         }else {
@@ -159,7 +162,27 @@ public class SheetServiceImpl implements SheetService {
 
     }
 
+    @Override
+    public MarkDTO getMarkDTOBySheetId(int sheetId) {
+        return sheetDAOImpl.getMarkDTOBySheetId(sheetId);
+    }
 
+    @Override
+    @Transactional
+    public void postMark(Sheet sheet) {
+         sheet.setMarked(true);
+         sheetDAOImpl.saveSheet(sheet);
+    }
+
+    @Override
+    public FaceCompareDTO getPhotoCompare(Sheet sheet) {
+        byte[] avatar = sheet.getStudent().getUser().getAvatar();
+        byte[] photo = sheet.getPhoto();
+        FaceCompareDTO faceCompareDTO = new FaceCompareDTO();
+        faceCompareDTO.setPhoto(photo);
+        faceCompareDTO.setAvatar(avatar);
+        return faceCompareDTO;
+    }
 
 
     private double calculateSimilarity(Mat face1, Mat face2) {

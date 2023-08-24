@@ -1,9 +1,6 @@
 package com.system.quiz.service;
 
-import com.system.quiz.entity.Answer;
-import com.system.quiz.entity.MarkDTO;
-import com.system.quiz.entity.Sheet;
-import com.system.quiz.entity.SheetDTO;
+import com.system.quiz.entity.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -32,9 +29,15 @@ public interface SheetService {
 
     void saveSheet(Sheet sheet);
 
-    List<MarkDTO> getMarkListByTestId(int testId);
+    List<MarkItemDTO> getMarkListByTestId(int testId);
 
     SheetDTO getSheetDTOById(int sheetId);
 
-    List<MarkDTO> getMarkListByTeacherIdOrTestId(int teacherId, int testId);
+    List<MarkItemDTO> getMarkListByTeacherIdOrTestId(int teacherId, int testId);
+
+    MarkDTO getMarkDTOBySheetId(int sheetId);
+
+    void postMark(Sheet sheet);
+
+    FaceCompareDTO getPhotoCompare(Sheet sheet);
 }

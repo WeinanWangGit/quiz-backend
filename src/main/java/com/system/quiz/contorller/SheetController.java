@@ -1,9 +1,6 @@
 package com.system.quiz.contorller;
 
-import com.system.quiz.entity.Answer;
-import com.system.quiz.entity.MarkDTO;
-import com.system.quiz.entity.Sheet;
-import com.system.quiz.entity.SheetDTO;
+import com.system.quiz.entity.*;
 import com.system.quiz.exception.ApiResponse;
 import com.system.quiz.service.impl.SheetServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +58,26 @@ public class SheetController {
     }
 
 
+
+
+
+    @PostMapping("/sheet/photo/save/{sheetId}")
+    public ResponseEntity<ApiResponse<String>> savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photo) {
+        try {
+            Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
+            byte[] photoData = photo.getBytes();
+            sheet.setPhoto(photoData);
+            sheetServiceImpl.saveSheet(sheet);
+            ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.value(), "Sheet photo save success", null);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "photo save fail", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+
+
     @PostMapping("/sheet/submit/{sheetId}")
     public ResponseEntity<ApiResponse<SheetDTO>> submitTestSheet(@PathVariable int sheetId, @RequestParam("startTime") Long startTimeMillis) {
         try {
@@ -79,6 +96,36 @@ public class SheetController {
         }
     }
 
+    @GetMapping("/mark/compare/{sheetId}")
+    public ResponseEntity<?> getPhotoCompare(@PathVariable int sheetId) {
+        try {
+            Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
+            FaceCompareDTO faceCompareDTO = sheetServiceImpl.getPhotoCompare(sheet);
+            return ResponseEntity.ok(faceCompareDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error getting photo comparison");
+        }
+    }
+
+
+
+
+
+
+    @PostMapping("/mark/post/{sheetId}")
+    public ResponseEntity<String> postMark(@PathVariable int sheetId) {
+        try {
+            // Convert the received timestamp to java.sql.Timestamp
+            Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
+            sheetServiceImpl.postMark(sheet);
+
+            return ResponseEntity.ok("Test sheet submitted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error submitting test sheet");
+        }
+    }
 
     @GetMapping("/mark/list/student/{studentId}")
     public List<Sheet> getMarkListByStudentId(@PathVariable int studentId) {
@@ -87,12 +134,12 @@ public class SheetController {
 
 
     @GetMapping("/mark/list/test/{testId}")
-    public List<MarkDTO> getMarkListByTestId(@PathVariable int testId) {
+    public List<MarkItemDTO> getMarkListByTestId(@PathVariable int testId) {
         return sheetServiceImpl.getMarkListByTestId(testId);
     }
 
     @GetMapping("/mark/list/{teacherId}/{testId}")
-    public List<MarkDTO> getMarkListByTeacherIdOrTestId(@PathVariable int teacherId, @PathVariable int testId) {
+    public List<MarkItemDTO> getMarkListByTeacherIdOrTestId(@PathVariable int teacherId, @PathVariable int testId) {
         return sheetServiceImpl.getMarkListByTeacherIdOrTestId(teacherId, testId);
     }
 
@@ -102,22 +149,13 @@ public class SheetController {
     }
 
 
-
-
-    @PostMapping("/sheet/photo/save/{sheetId}")
-    public ResponseEntity<ApiResponse<String>> savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photo) {
-        try {
-            Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
-            byte[] photoData = photo.getBytes();
-            sheet.setPhoto(photoData);
-            sheetServiceImpl.saveSheet(sheet);
-            ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.value(), "Sheet photo save success", null);
-            return ResponseEntity.ok(response);
-        } catch (IOException e) {
-            ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "photo save fail", null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+    @GetMapping("/mark/{sheetId}")
+    public MarkDTO getMarkDTOBySheetId(@PathVariable int sheetId) {
+        return sheetServiceImpl.getMarkDTOBySheetId(sheetId);
     }
+
+
+
 
 
 

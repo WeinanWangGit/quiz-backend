@@ -146,16 +146,16 @@ public class SheetDAOImpl implements SheetDAO {
         }
     }
     @Override
-    public List<MarkDTO> getMarkListByTestId(int testId) {
+    public List<MarkItemDTO> getMarkListByTestId(int testId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s FROM Sheet s WHERE s.test.id = :testId AND s.isMarked = true",
+                "SELECT s FROM Sheet s WHERE s.test.id = :testId AND s.isSubmited = true",
                 Sheet.class);
         query.setParameter("testId", testId);
 
         List<Sheet> markedSheets = query.getResultList();
-        List<MarkDTO> markDTOList = new ArrayList<>();
+        List<MarkItemDTO> markItemDTOList = new ArrayList<>();
 
-        return buildMarkDTO(markedSheets, markDTOList);
+        return buildMarkItemDTOList(markedSheets, markItemDTOList);
     }
 
     @Override
@@ -174,44 +174,133 @@ public class SheetDAOImpl implements SheetDAO {
 
 
     @Override
-    public List<MarkDTO> getMarkListByTeacherId(int teacherId) {
+    public List<MarkItemDTO> getMarkListByTeacherId(int teacherId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s FROM Sheet s WHERE s.test.teacherId = :teacherId AND s.isMarked = true ",
+                "SELECT s FROM Sheet s WHERE s.test.teacherId = :teacherId AND s.isSubmited = true ",
                 Sheet.class);
         query.setParameter("teacherId", teacherId);
 
         List<Sheet> markedSheets = query.getResultList();
-        List<MarkDTO> markDTOList = new ArrayList<>();
+        List<MarkItemDTO> markItemDTOList = new ArrayList<>();
 
-        return buildMarkDTO(markedSheets, markDTOList);
+        return buildMarkItemDTOList(markedSheets, markItemDTOList);
     }
 
-
-    private List<MarkDTO> buildMarkDTO(List<Sheet> markedSheets, List<MarkDTO> markDTOList) {
-        for (Sheet markedSheet : markedSheets) {
-            MarkDTO markDTO = new MarkDTO();
-            markDTO.setId(markedSheet.getId());
-            markDTO.setStudentId(markedSheet.getStudent().getId());
-            markDTO.setStudentName(markedSheet.getStudent().getUser().getOriginalUsername());
-            markDTO.setScore(markedSheet.getScore());
-            markDTO.setMajor(markedSheet.getStudent().getMajor());
-            markDTO.setDepartment(markedSheet.getStudent().getDepartment());
-
-            boolean withQuestion = false;
-            boolean withAnswer = false;
-            TestDTO testDTO = buildTestDTO(markedSheet, withQuestion, withAnswer);
-
-            markDTO.setTest(testDTO);
-
-
-
-            markDTO.setSimilarity(markedSheet.getSimilarity());
-
-            markDTOList.add(markDTO);
+    @Override
+    public MarkDTO getMarkDTOBySheetId(int sheetId) {
+        Sheet sheet = entityManager.find(Sheet.class, sheetId);
+        if (sheet == null) {
+            return null; // Sheet with the given ID doesn't exist
         }
 
-        return markDTOList;
+        MarkDTO markDTO = buildMarkDTO(sheet);
+
+        return markDTO;
     }
+
+    private MarkDTO buildMarkDTO(Sheet sheet) {
+        MarkDTO markDTO = new MarkDTO();
+        Test test = sheet.getTest();
+        List<Question> questions = test.getQuestions();
+        List<Answer> answers = getAnswersBySheetIdAndQuestionIds(sheet.getId(), questionDAOImpl.getQuestionIds(questions));
+
+        // Set sheet info
+        markDTO.setId(sheet.getId());
+        markDTO.setStudentId(sheet.getStudent().getId());
+        markDTO.setStudentName(sheet.getStudent().getUser().getOriginalUsername());
+        markDTO.setScore(sheet.getScore());
+        markDTO.setMajor(sheet.getStudent().getMajor());
+        markDTO.setDepartment(sheet.getStudent().getDepartment());
+        markDTO.setSimilarity(sheet.getSimilarity());
+
+        // Set testInfo
+        markDTO.setTime(test.getTime());
+        markDTO.setTitle(test.getTitle());
+        markDTO.setTimer(test.getTimer());
+        markDTO.setTotalScore(test.getScore());
+        markDTO.setBeginTime(test.getBeginTime());
+        markDTO.setSafeCheck(test.isSafeCheck());
+        markDTO.setAnswerShowModel(test.getAnswerShowModel());
+
+        // Set questionDTOs
+        List<QuestionDTO> questionDTOs = new ArrayList<>();
+        for (Question question : questions) {
+            QuestionDTO questionDTO = questionDAOImpl.buildQuestionDTO(question, true);
+            questionDTOs.add(questionDTO);
+        }
+        markDTO.setQuestionDTOs(questionDTOs);
+
+
+        markDTO.setAnswers(answers);
+
+        return markDTO;
+    }
+
+
+
+    private List<Answer> getAnswersBySheetIdAndQuestionIds(int sheetId, List<Integer> questionIds) {
+        TypedQuery<Answer> query = entityManager.createQuery(
+                "SELECT a FROM Answer a WHERE a.sheetId = :sheetId AND a.questionId IN :questionIds",
+                Answer.class
+        );
+        query.setParameter("sheetId", sheetId);
+        query.setParameter("questionIds", questionIds);
+
+        return query.getResultList();
+    }
+
+
+    private List<MarkItemDTO> buildMarkItemDTOList(List<Sheet> markedSheets, List<MarkItemDTO> markItemDTOList) {
+        for (Sheet markedSheet : markedSheets) {
+            MarkItemDTO marItemDTO = new MarkItemDTO();
+            marItemDTO.setId(markedSheet.getId());
+            marItemDTO.setStudentId(markedSheet.getStudent().getId());
+            marItemDTO.setStudentName(markedSheet.getStudent().getUser().getOriginalUsername());
+            marItemDTO.setScore(markedSheet.getScore());
+            marItemDTO.setSimilarity(markedSheet.getSimilarity());
+            marItemDTO.setMajor(markedSheet.getStudent().getMajor());
+            marItemDTO.setDepartment(markedSheet.getStudent().getDepartment());
+            marItemDTO.setMarked(markedSheet.isMarked());
+
+            Test test = markedSheet.getTest();
+            marItemDTO.setTitle(test.getTitle());
+            marItemDTO.setBeginTime(test.getBeginTime());
+            marItemDTO.setTimer(test.getTimer());
+            marItemDTO.setSafeCheck(test.isSafeCheck());
+            marItemDTO.setTime(test.getTime());
+
+
+            markItemDTOList.add(marItemDTO);
+        }
+
+        return markItemDTOList;
+
+    }
+
+
+//    private List<MarkDTO> buildMarkDTOList(List<Sheet> markedSheets, List<MarkDTO> markDTOList) {
+//        for (Sheet markedSheet : markedSheets) {
+//            MarkDTO markDTO = new MarkDTO();
+//            markDTO.setId(markedSheet.getId());
+//            markDTO.setStudentId(markedSheet.getStudent().getId());
+//            markDTO.setStudentName(markedSheet.getStudent().getUser().getOriginalUsername());
+//            markDTO.setScore(markedSheet.getScore());
+//            markDTO.setMajor(markedSheet.getStudent().getMajor());
+//            markDTO.setDepartment(markedSheet.getStudent().getDepartment());
+//
+//            boolean withQuestion = false;
+//            boolean withAnswer = false;
+//            TestDTO testDTO = buildTestDTO(markedSheet, withQuestion, withAnswer);
+//
+//            markDTO.setTest(testDTO);
+//
+//            markDTO.setSimilarity(markedSheet.getSimilarity());
+//
+//            markDTOList.add(markDTO);
+//        }
+//
+//        return markDTOList;
+//    }
 
 
     private TestDTO buildTestDTO(Sheet sheet, boolean withQuestion, boolean withAnswer){

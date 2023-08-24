@@ -28,6 +28,8 @@ public class Answer {
 
     private String context;
 
+    private String feedback;
+
     @Column(name = "is_marked")
     private boolean isMarked;
 

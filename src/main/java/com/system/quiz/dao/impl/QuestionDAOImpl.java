@@ -90,4 +90,13 @@ public class QuestionDAOImpl implements QuestionDAO {
         questionDTO.setTeacherId(question.getTeacher().getId());
         return questionDTO;
     }
+
+    List<Integer> getQuestionIds(List<Question> questions) {
+        List<Integer> questionIds = new ArrayList<>();
+        for (Question question : questions) {
+            questionIds.add(question.getId());
+        }
+        return questionIds;
+    }
+
 }

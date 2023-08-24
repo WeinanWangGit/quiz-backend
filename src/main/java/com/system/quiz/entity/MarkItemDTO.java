@@ -3,40 +3,33 @@ package com.system.quiz.entity;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
-public class MarkDTO {
+public class MarkItemDTO {
     private Integer id;
 
     private Integer studentId;
 
     private String studentName;
 
-    private String title;
+    private Double similarity;
 
-    private Integer time;
+    private double score;
+
+    private String title;
 
     private boolean timer;
 
-    private double totalScore;
+    private Integer time;
 
     private Timestamp beginTime;
 
     private boolean safeCheck;
 
-    private String answerShowModel;
-
-    private Double similarity;
-
-    private double score;
-
     private String department;
 
     private String major;
 
-    private List<QuestionDTO> questionDTOs;
-
-    private List<Answer> answers;
+    private boolean isMarked;
 
 }
