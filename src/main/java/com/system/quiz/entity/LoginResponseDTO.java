@@ -8,5 +8,6 @@ public class LoginResponseDTO {
     private String username;
     private String email;
     private String role;
+    private byte[] avatar;
 }
 

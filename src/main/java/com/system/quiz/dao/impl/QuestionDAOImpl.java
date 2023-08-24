@@ -23,8 +23,6 @@ public class QuestionDAOImpl implements QuestionDAO {
         this.entityManager = entityManager;
     }
 
-
-
     @Override
     public void createQuestion(Question question) {
         entityManager.persist(question);
@@ -51,26 +49,14 @@ public class QuestionDAOImpl implements QuestionDAO {
         List<Question> questionList = query.getResultList();
 
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+        Boolean withAnswer = true;
         for (Question question : questionList) {
-            QuestionDTO questionDTO = new QuestionDTO();
-            questionDTO.setId(question.getId());
-            questionDTO.setCreateTime(question.getCreateTime());
-            questionDTO.setUpdateTime(question.getUpdateTime());
-            questionDTO.setType(question.getType());
-            questionDTO.setContent(question.getContent());
-            questionDTO.setAnswer(question.getAnswer());
-            questionDTO.setChoice(question.getChoice());
-            questionDTO.setScore(question.getScore());
-            questionDTO.setTeacherId(question.getTeacher().getId());
+            QuestionDTO questionDTO = buildQuestionDTO(question, withAnswer);
             questionDTOList.add(questionDTO);
         }
 
         return questionDTOList;
     }
-
-
-
-
 
     @Override
     public void addQuestionToTest(int testId, Question question) {
@@ -78,7 +64,6 @@ public class QuestionDAOImpl implements QuestionDAO {
         test.getQuestions().add(question);
         entityManager.merge(test);
     }
-
 
     @Override
     public void editQuestion(int questionId, Question question) {
@@ -90,5 +75,28 @@ public class QuestionDAOImpl implements QuestionDAO {
         entityManager.merge(existingQuestion);
     }
 
+    QuestionDTO buildQuestionDTO(Question question, boolean withAnswer) {
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setId(question.getId());
+        questionDTO.setCreateTime(question.getCreateTime());
+        questionDTO.setUpdateTime(question.getUpdateTime());
+        questionDTO.setType(question.getType());
+        questionDTO.setContent(question.getContent());
+        if(withAnswer){
+            questionDTO.setAnswer(question.getAnswer());
+        }
+        questionDTO.setChoice(question.getChoice());
+        questionDTO.setScore(question.getScore());
+        questionDTO.setTeacherId(question.getTeacher().getId());
+        return questionDTO;
+    }
+
+    List<Integer> getQuestionIds(List<Question> questions) {
+        List<Integer> questionIds = new ArrayList<>();
+        for (Question question : questions) {
+            questionIds.add(question.getId());
+        }
+        return questionIds;
+    }
 
 }

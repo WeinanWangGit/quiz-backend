@@ -29,11 +29,16 @@ public class Sheet {
 
     private double score;
 
+    @Column(name = "is_submited")
+    private boolean isSubmited;
+
     @Column(name = "is_marked")
     private boolean isMarked;
 
-    @Column(name = "begin_time")
-    private Timestamp beginTime;
+
+    //open the sheet time
+    @Column(name = "start_time")
+    private Timestamp startTime;
 
     @Column(name = "submit_time")
     private Timestamp submitTime;
@@ -41,4 +46,6 @@ public class Sheet {
     @Lob
     @Column(name = "photo", columnDefinition = "BLOB")
     private byte[] photo;
+
+    private Double similarity;
 }

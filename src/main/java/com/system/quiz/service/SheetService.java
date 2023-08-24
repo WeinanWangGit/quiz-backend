@@ -1,22 +1,23 @@
 package com.system.quiz.service;
 
-import com.system.quiz.entity.Sheet;
+import com.system.quiz.entity.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface SheetService {
 
 
 
-    List<Sheet> getSheetListByStudentId(int studentId);
+    List<SheetDTO> getSheetDTOListByStudentId(int studentId);
 
     Sheet getSheetByTestIdAndStudentId(int testId, int studentId);
 
 
 
-    void saveSheetQuestionAnswer(int questionId, int sheetId, String answer);
+    Answer saveSheetQuestionAnswer(int questionId, int sheetId, Answer answer);
 
-    void submitTestSheet(Sheet sheet);
+    SheetDTO submitTestSheet(Sheet sheet, Timestamp startTime);
 
 
 
@@ -27,4 +28,16 @@ public interface SheetService {
     Sheet getSheetById(int sheetId);
 
     void saveSheet(Sheet sheet);
+
+    List<MarkItemDTO> getMarkListByTestId(int testId);
+
+    SheetDTO getSheetDTOById(int sheetId);
+
+    List<MarkItemDTO> getMarkListByTeacherIdOrTestId(int teacherId, int testId);
+
+    MarkDTO getMarkDTOBySheetId(int sheetId);
+
+    void postMark(Sheet sheet);
+
+    FaceCompareDTO getPhotoCompare(Sheet sheet);
 }

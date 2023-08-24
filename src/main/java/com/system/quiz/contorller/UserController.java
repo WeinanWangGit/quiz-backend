@@ -50,9 +50,10 @@ public class UserController {
     private LoginResponseDTO createLoginResponse(User user) {
         LoginResponseDTO responseDTO = new LoginResponseDTO();
         responseDTO.setId(user.getId());
-        responseDTO.setUsername(user.getUsername());
+        responseDTO.setUsername(user.getOriginalUsername());
         responseDTO.setEmail(user.getEmail());
         responseDTO.setRole(String.valueOf(user.getRole()));
+        responseDTO.setAvatar(user.getAvatar());
 
         return responseDTO;
     }

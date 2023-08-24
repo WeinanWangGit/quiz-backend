@@ -21,13 +21,14 @@ public class Answer {
     @Column(name = "question_id")
     private int questionId;
 
-    @ManyToOne
-    @JoinColumn(name = "sheet_id")
-    private Sheet sheet;
+    @Column(name = "sheet_id")
+    private Integer sheetId;
 
     private double score;
 
     private String context;
+
+    private String feedback;
 
     @Column(name = "is_marked")
     private boolean isMarked;
