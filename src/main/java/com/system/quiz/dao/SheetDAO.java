@@ -16,7 +16,7 @@ public interface SheetDAO {
 
     Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId);
 
-    List<Sheet> getMarkListByStudentId(int studentId);
+    List<MarkItemDTO> getMarkListByStudentId(int studentId);
 
 
     void saveSheet(Sheet sheet);

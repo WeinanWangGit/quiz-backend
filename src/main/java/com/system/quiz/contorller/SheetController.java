@@ -128,7 +128,7 @@ public class SheetController {
     }
 
     @GetMapping("/mark/list/student/{studentId}")
-    public List<Sheet> getMarkListByStudentId(@PathVariable int studentId) {
+    public List<MarkItemDTO> getMarkListByStudentId(@PathVariable int studentId) {
         return sheetServiceImpl.getMarkListByStudentId(studentId);
     }
 

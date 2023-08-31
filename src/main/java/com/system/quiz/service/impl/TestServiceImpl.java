@@ -30,26 +30,34 @@ public class TestServiceImpl implements TestService {
     }
     @Override
     @Transactional
-    public Test createTest(Test test, Map<String, String> takerMap) {
+    public Test createTest(Test test, Map<String, Object> takerMap) {
 
         // Extract department and major from takerMap
-        String department = takerMap.get("department");
-        String major = takerMap.get("major");
+        String department = (String) takerMap.get("department");
+        Object majorObj = takerMap.get("major");
 
-        // Split the major string into an array
-        String[] majorArray = major.split(",");
+        ArrayList<String> majorArray = new ArrayList<>();
+        if (majorObj instanceof String) {
+            // If major is a single String, add it to the ArrayList
+            majorArray.add((String) majorObj);
+        } else if (majorObj instanceof ArrayList) {
+            // If major is already an ArrayList, cast it
+            majorArray = (ArrayList<String>) majorObj;
+        }
 
         Test newTest = testDAOImpl.createTest(test);
-
         Integer testId = newTest.getId();
 
         // get all student id
-        ArrayList<Integer> studentIds = userDAOImpl.getStudentIdListByDapartAndMajor(department, majorArray);
+        ArrayList<Integer> studentIds = userDAOImpl.getStudentIdListByDapartAndMajor(department, majorArray.toArray(new String[0]));
 
-         sheetDAOImpl.generateSheet(testId, studentIds);
+        sheetDAOImpl.generateSheet(testId, studentIds);
 
-         return newTest;
+        return newTest;
     }
+
+
+
 
     @Override
     @Transactional

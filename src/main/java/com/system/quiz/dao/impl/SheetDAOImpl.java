@@ -101,12 +101,15 @@ public class SheetDAOImpl implements SheetDAO {
     }
 
     @Override
-    public List<Sheet> getMarkListByStudentId(int studentId) {
+    public List<MarkItemDTO> getMarkListByStudentId(int studentId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s.test FROM Sheet s WHERE s.student.id = :studentId AND s.isMarked = true",
+                "SELECT s FROM Sheet s WHERE s.student.id = :studentId AND s.isMarked = true",
                 Sheet.class);
         query.setParameter("studentId", studentId);
-        return query.getResultList();
+        List<Sheet> markedSheets = query.getResultList();
+        List<MarkItemDTO> markItemDTOList = new ArrayList<>();
+
+        return buildMarkItemDTOList(markedSheets, markItemDTOList);
     }
 
     @Override
@@ -141,6 +144,7 @@ public class SheetDAOImpl implements SheetDAO {
             sheet.setCreateTime(new Timestamp(System.currentTimeMillis()));
             sheet.setUpdateTime(sheet.getCreateTime());
             sheet.setMarked(false);
+            sheet.setSubmited(false);
 
             entityManager.persist(sheet);
         }

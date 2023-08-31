@@ -14,7 +14,7 @@ public interface QuestionService {
 
     void editQuestion(int questionId, Question question);
 
-    void createQuestion(Question question);
+    QuestionDTO createQuestion(Question question);
 
     void deleteQuestion(int questionId);
 }

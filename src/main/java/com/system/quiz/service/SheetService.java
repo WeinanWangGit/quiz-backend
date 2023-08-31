@@ -21,7 +21,7 @@ public interface SheetService {
 
 
 
-    List<Sheet> getMarkListByStudentId(int studentId);
+    List<MarkItemDTO> getMarkListByStudentId(int studentId);
 
     Sheet getMarkSheetByTestIdAndStudentId(int testId, int studentId);
 

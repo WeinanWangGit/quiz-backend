@@ -24,8 +24,21 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
     @Override
-    public void createQuestion(Question question) {
+    public QuestionDTO createQuestion(Question question) {
         entityManager.persist(question);
+
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setId(question.getId());
+        questionDTO.setCreateTime(question.getCreateTime());
+        questionDTO.setUpdateTime(question.getUpdateTime());
+        questionDTO.setType(question.getType());
+        questionDTO.setContent(question.getContent());
+        questionDTO.setAnswer(question.getAnswer());
+        questionDTO.setChoice(question.getChoice());
+        questionDTO.setScore(question.getScore());
+        questionDTO.setTeacherId(question.getTeacher().getId()); // Assuming a Teacher property in Question entity
+
+        return questionDTO;
     }
 
     @Override

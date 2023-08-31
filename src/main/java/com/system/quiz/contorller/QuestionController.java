@@ -24,9 +24,9 @@ public class QuestionController {
 
 
     @PostMapping("/question/create")
-    public ResponseEntity<String> createQuestion(@RequestBody Question question) {
-        questionServiceImpl.createQuestion(question);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Question created successfully");
+    public ResponseEntity<QuestionDTO> createQuestion(@RequestBody Question question) {
+        QuestionDTO questionDTO = questionServiceImpl.createQuestion(question);
+        return ResponseEntity.status(HttpStatus.CREATED).body(questionDTO);
     }
 
     @GetMapping("/questions")

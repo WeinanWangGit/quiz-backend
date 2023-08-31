@@ -61,7 +61,7 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
-    public List<Sheet> getMarkListByStudentId(int studentId) {
+    public List<MarkItemDTO> getMarkListByStudentId(int studentId) {
         return sheetDAOImpl.getMarkListByStudentId(studentId);
     }
 
@@ -84,6 +84,9 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional
+    /**
+     * calculate face similarity
+     */
     public void saveSheet(Sheet sheet) {
         // Using openCV check face similarity
         byte[] avatar = sheet.getStudent().getUser().getAvatar();
