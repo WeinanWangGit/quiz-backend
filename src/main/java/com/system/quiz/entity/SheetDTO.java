@@ -24,4 +24,8 @@ public class SheetDTO {
 
     private String studentNumber;
 
+    private boolean isSubmited;
+
+    private double correctnessRate;
+
 }

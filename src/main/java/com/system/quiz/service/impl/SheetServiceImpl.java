@@ -1,6 +1,7 @@
 package com.system.quiz.service.impl;
 
 
+import com.system.quiz.dao.impl.QuestionDAOImpl;
 import com.system.quiz.dao.impl.SheetDAOImpl;
 import com.system.quiz.dao.impl.TestDAOImpl;
 import com.system.quiz.entity.*;
@@ -25,12 +26,16 @@ public class SheetServiceImpl implements SheetService {
 
     private SheetDAOImpl sheetDAOImpl;
     private TestDAOImpl testDAOImpl;
+    private QuestionDAOImpl questionDAOImpl;
+    private QuestionServiceImpl questionServiceImpl;
     private static final Logger logger = LoggerFactory.getLogger(SheetServiceImpl.class);
 
     @Autowired
-    public SheetServiceImpl(SheetDAOImpl sheetDAOImpl, TestDAOImpl testDAOImpl){
+    public SheetServiceImpl(SheetDAOImpl sheetDAOImpl, TestDAOImpl testDAOImpl, QuestionServiceImpl questionServiceImpl, QuestionDAOImpl questionDAOImpl){
         this.sheetDAOImpl = sheetDAOImpl;
         this.testDAOImpl = testDAOImpl;
+        this.questionDAOImpl = questionDAOImpl;
+        this.questionServiceImpl = questionServiceImpl;
     }
     @Override
     public List<SheetDTO> getSheetDTOListByStudentId(int studentId) {
@@ -57,11 +62,87 @@ public class SheetServiceImpl implements SheetService {
         sheet.setSubmitTime(currentTimestamp);
         sheet.setSubmited(true);
         sheet.setStartTime(startTime);
-        return sheetDAOImpl.submitTestSheet(sheet);
+
+        //auto mark step
+        double correctnessRate = autoMarkSheetStep(sheet);
+
+        SheetDTO sheetDTO = sheetDAOImpl.submitTestSheet(sheet);
+
+
+        if(sheet.getTest().getAnswerShowModel().trim().equalsIgnoreCase("Immediately")){
+            sheetDTO.setCorrectnessRate(correctnessRate);
+        }
+
+        return sheetDTO;
     }
 
+    private double autoMarkSheetStep(Sheet sheet) {
+        List<Question> questions = sheet.getTest().getQuestions();
+
+        int totalCorrectOptions = 0; // Initialize the total correct options count
+        int totalChoices = 0; // Initialize the total choices count
+        int sheetScore = 0;
+
+        for (Question question : questions) {
+            Integer questionId = question.getId();
+            Answer answer = questionDAOImpl.getAnswerByQuestionIdAndSheetId(questionId, sheet.getId());
+            questionServiceImpl.markAnswer(question, answer);
+            sheetScore += answer.getScore();
+
+            // Check if the question is a Multiple choice question
+            if ("Multiple".equalsIgnoreCase(question.getType())) {
+                totalCorrectOptions += countCorrectChoices(question.getAnswer(), answer.getContext());
+                // Count the total number of choices (including blanks)
+                totalChoices += countChoices(question.getChoice());
+            } else {
+                // For other question types, consider the question as having only one correct option
+                totalCorrectOptions += answer.getScore() > 0 ? 1 : 0;
+                // For other question types, consider the question as having only one choice
+                totalChoices += 1;
+            }
+
+        }
+
+        sheet.setScore(sheetScore);
+
+        // Calculate the Correctness Rate as the total number of correct options divided by the total number of choices (including blanks).
+        double correctnessRate = (double) totalCorrectOptions / totalChoices;
+
+        return correctnessRate;
+    }
+
+    private int countCorrectChoices(String questionAnswer, String answerContext) {
+        String[] correctChoices = questionAnswer.split(",");
+        String[] selectedChoices = answerContext.split(",");
+
+        int correctCount = 0;
+
+        for (String choice : selectedChoices) {
+            if (containsIgnoreCase(correctChoices, choice.trim())) {
+                correctCount++;
+            }
+        }
+
+        return correctCount;
+    }
+
+    private int countChoices(String choices) {
+        String[] allChoices = choices.split(",");
+        return allChoices.length;
+    }
+
+    private boolean containsIgnoreCase(String[] array, String value) {
+        for (String item : array) {
+            if (item.trim().equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     @Override
-    public List<Sheet> getMarkListByStudentId(int studentId) {
+    public List<MarkItemDTO> getMarkListByStudentId(int studentId) {
         return sheetDAOImpl.getMarkListByStudentId(studentId);
     }
 
@@ -84,6 +165,9 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional
+    /**
+     * calculate face similarity
+     */
     public void saveSheet(Sheet sheet) {
         // Using openCV check face similarity
         byte[] avatar = sheet.getStudent().getUser().getAvatar();
@@ -170,6 +254,8 @@ public class SheetServiceImpl implements SheetService {
     @Override
     @Transactional
     public void postMark(Sheet sheet) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        sheet.setUpdateTime(currentTimestamp);
          sheet.setMarked(true);
          sheetDAOImpl.saveSheet(sheet);
     }

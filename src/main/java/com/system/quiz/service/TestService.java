@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface TestService {
-    Test createTest(Test test, Map<String, String> takerMap);
+    Test createTest(Test test, Map<String, Object> takerMap);
 
     Test editTest(Test test);
 

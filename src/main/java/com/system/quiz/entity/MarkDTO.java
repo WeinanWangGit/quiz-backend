@@ -15,6 +15,8 @@ public class MarkDTO {
 
     private String title;
 
+    private String type;
+
     private Integer time;
 
     private boolean timer;

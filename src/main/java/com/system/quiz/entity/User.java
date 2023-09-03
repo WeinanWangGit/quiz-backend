@@ -26,6 +26,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "google_id")
     private String googleId;
 
     @Lob

@@ -25,6 +25,9 @@ public class TestDTO {
 
     private Timestamp beginTime;
 
+    private Timestamp endTime;
+
+
     private boolean safeCheck;
 
     private String completeType;
@@ -34,6 +37,8 @@ public class TestDTO {
     private String submitMode;
 
     private String retakeRule;
+
+    private String answerShowModel;
 
     private List<QuestionDTO> questionDTOs;
 

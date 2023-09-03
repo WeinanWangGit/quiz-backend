@@ -67,16 +67,40 @@ public class SheetDAOImpl implements SheetDAO {
     public Answer saveSheetQuestionAnswer(int questionId, int sheetId, Answer answer) {
         long currentTimeMillis = System.currentTimeMillis();
 
-        if (answer.getId() == null || answer.getId() <= 0) {
+        Answer dbAnswer = getAnswerBySheetIdAndQuestionId(sheetId, questionId);
+
+        if (dbAnswer != null) {
+            dbAnswer.setContext(answer.getContext());
+            dbAnswer.setUpdateTime(new Timestamp(currentTimeMillis));
+            entityManager.merge(dbAnswer);
+            return dbAnswer;
+        } else {
             answer.setCreateTime(new Timestamp(currentTimeMillis));
             answer.setUpdateTime(new Timestamp(currentTimeMillis));
             entityManager.persist(answer);
-        } else {
-            answer.setUpdateTime(new Timestamp(currentTimeMillis));
-            entityManager.merge(answer);
+            return answer;
         }
-        return answer;
     }
+
+    private Answer getAnswerBySheetIdAndQuestionId(int sheetId, int questionId) {
+        TypedQuery<Answer> query = entityManager.createQuery(
+                "SELECT a FROM Answer a WHERE a.sheetId = :sheetId AND a.questionId = :questionId",
+                Answer.class
+        );
+        query.setParameter("sheetId", sheetId);
+        query.setParameter("questionId", questionId);
+
+        List<Answer> answers = query.getResultList();
+
+        // Check if any answers were found
+        if (!answers.isEmpty()) {
+            // Return the first answer (assuming there should be only one answer per sheet and question)
+            return answers.get(0);
+        } else {
+            return null; // No answer found for the given sheet and question
+        }
+    }
+
 
 
     @Override
@@ -101,12 +125,15 @@ public class SheetDAOImpl implements SheetDAO {
     }
 
     @Override
-    public List<Sheet> getMarkListByStudentId(int studentId) {
+    public List<MarkItemDTO> getMarkListByStudentId(int studentId) {
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s.test FROM Sheet s WHERE s.student.id = :studentId AND s.isMarked = true",
+                "SELECT s FROM Sheet s WHERE s.student.id = :studentId AND s.isMarked = true",
                 Sheet.class);
         query.setParameter("studentId", studentId);
-        return query.getResultList();
+        List<Sheet> markedSheets = query.getResultList();
+        List<MarkItemDTO> markItemDTOList = new ArrayList<>();
+
+        return buildMarkItemDTOList(markedSheets, markItemDTOList);
     }
 
     @Override
@@ -141,14 +168,16 @@ public class SheetDAOImpl implements SheetDAO {
             sheet.setCreateTime(new Timestamp(System.currentTimeMillis()));
             sheet.setUpdateTime(sheet.getCreateTime());
             sheet.setMarked(false);
+            sheet.setSubmited(false);
 
             entityManager.persist(sheet);
         }
     }
     @Override
     public List<MarkItemDTO> getMarkListByTestId(int testId) {
+//        AND s.isSubmited = true  show all test not just submited
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s FROM Sheet s WHERE s.test.id = :testId AND s.isSubmited = true",
+                "SELECT s FROM Sheet s WHERE s.test.id = :testId",
                 Sheet.class);
         query.setParameter("testId", testId);
 
@@ -216,6 +245,7 @@ public class SheetDAOImpl implements SheetDAO {
         // Set testInfo
         markDTO.setTime(test.getTime());
         markDTO.setTitle(test.getTitle());
+        markDTO.setType(test.getType());
         markDTO.setTimer(test.getTimer());
         markDTO.setTotalScore(test.getScore());
         markDTO.setBeginTime(test.getBeginTime());
@@ -261,6 +291,7 @@ public class SheetDAOImpl implements SheetDAO {
             marItemDTO.setMajor(markedSheet.getStudent().getMajor());
             marItemDTO.setDepartment(markedSheet.getStudent().getDepartment());
             marItemDTO.setMarked(markedSheet.isMarked());
+            marItemDTO.setSubmited(markedSheet.isSubmited());
 
             Test test = markedSheet.getTest();
             marItemDTO.setTitle(test.getTitle());
@@ -316,7 +347,9 @@ public class SheetDAOImpl implements SheetDAO {
         testDTO.setRandomSort(test.isRandomSort());
         testDTO.setRetakeRule(test.getRetakeRule());
         testDTO.setSubmitMode(test.getSubmitMode());
+        testDTO.setAnswerShowModel(test.getAnswerShowModel());
         testDTO.setBeginTime(test.getBeginTime());
+        testDTO.setEndTime(test.getEndTime());
         testDTO.setTimer(test.getTimer());
         if(withQuestion){
             List<Question> questions = test.getQuestions();

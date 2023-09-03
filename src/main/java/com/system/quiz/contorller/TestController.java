@@ -7,6 +7,7 @@ import com.system.quiz.service.impl.TestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +21,13 @@ public class TestController {
     private TestServiceImpl testServiceImpl;
 
     @GetMapping("/hello")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAnyAuthority('STUDENT')")
     public String Hello() {
         return "Hello";
     }
 
     @PostMapping("/post")
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasAnyAuthority('TEACHER')")
     public String PostTest() {
         return "Hello";
     }
@@ -40,7 +41,7 @@ public class TestController {
     public ResponseEntity<ApiResponse<Test>> createTest(@RequestBody Map<String, Object>  requestBody) {
         ObjectMapper objectMapper = new ObjectMapper();
         Test test = objectMapper.convertValue(requestBody.get("test"), Test.class);
-        Map<String, String> takerMap = (Map<String, String>) requestBody.get("taker");
+        Map<String, Object> takerMap = (Map<String, Object>) requestBody.get("taker");
 
         Test createdTest = testServiceImpl.createTest(test, takerMap);
         ApiResponse<Test> response = new ApiResponse<>(HttpStatus.OK.value(), "Test created successfully.", createdTest);
@@ -69,21 +70,18 @@ public class TestController {
     }
 
     @GetMapping("/tests")
-    public ResponseEntity<ApiResponse<List<Test>>> getTestList() {
+    public ResponseEntity<List<Test>> getTestList() {
         List<Test> testList = testServiceImpl.findAll();
-        ApiResponse<List<Test>> response = new ApiResponse<>(HttpStatus.OK.value(), "All tests fetched successfully.", testList);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(testList);
     }
 
     @DeleteMapping("/test/delete/{testId}")
-    public ResponseEntity<ApiResponse<String>> deleteTest(@PathVariable int testId) {
+    public ResponseEntity<String> deleteTest(@PathVariable int testId) {
         try {
             testServiceImpl.deleteTest(testId);
-            ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.value(), "Test deleted successfully.", null);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok("Test deleted successfully.");
         } catch (RuntimeException ex) {
-            ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Cannot delete test. Associated sheets exist.", null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot delete test. Associated sheets exist.");
         }
     }
 }
