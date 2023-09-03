@@ -76,14 +76,12 @@ public class TestController {
     }
 
     @DeleteMapping("/test/delete/{testId}")
-    public ResponseEntity<ApiResponse<String>> deleteTest(@PathVariable int testId) {
+    public ResponseEntity<String> deleteTest(@PathVariable int testId) {
         try {
             testServiceImpl.deleteTest(testId);
-            ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.value(), "Test deleted successfully.", null);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok("Test deleted successfully.");
         } catch (RuntimeException ex) {
-            ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Cannot delete test. Associated sheets exist.", null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot delete test. Associated sheets exist.");
         }
     }
 }

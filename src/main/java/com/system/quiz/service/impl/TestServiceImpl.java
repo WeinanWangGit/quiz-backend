@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,8 @@ public class TestServiceImpl implements TestService {
             majorArray = (ArrayList<String>) majorObj;
         }
 
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        test.setCreateTime(currentTimestamp);
         Test newTest = testDAOImpl.createTest(test);
         Integer testId = newTest.getId();
 
@@ -62,6 +65,8 @@ public class TestServiceImpl implements TestService {
     @Override
     @Transactional
     public Test editTest(Test test) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        test.setUpdateTime(currentTimestamp);
          return testDAOImpl.editTest(test);
     }
 

@@ -81,11 +81,13 @@ public class SheetServiceImpl implements SheetService {
 
         int totalCorrectOptions = 0; // Initialize the total correct options count
         int totalChoices = 0; // Initialize the total choices count
+        int sheetScore = 0;
 
         for (Question question : questions) {
             Integer questionId = question.getId();
             Answer answer = questionDAOImpl.getAnswerByQuestionIdAndSheetId(questionId, sheet.getId());
             questionServiceImpl.markAnswer(question, answer);
+            sheetScore += answer.getScore();
 
             // Check if the question is a Multiple choice question
             if ("Multiple".equalsIgnoreCase(question.getType())) {
@@ -100,6 +102,8 @@ public class SheetServiceImpl implements SheetService {
             }
 
         }
+
+        sheet.setScore(sheetScore);
 
         // Calculate the Correctness Rate as the total number of correct options divided by the total number of choices (including blanks).
         double correctnessRate = (double) totalCorrectOptions / totalChoices;
@@ -250,6 +254,8 @@ public class SheetServiceImpl implements SheetService {
     @Override
     @Transactional
     public void postMark(Sheet sheet) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        sheet.setUpdateTime(currentTimestamp);
          sheet.setMarked(true);
          sheetDAOImpl.saveSheet(sheet);
     }

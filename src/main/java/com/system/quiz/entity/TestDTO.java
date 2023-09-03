@@ -25,6 +25,9 @@ public class TestDTO {
 
     private Timestamp beginTime;
 
+    private Timestamp endTime;
+
+
     private boolean safeCheck;
 
     private String completeType;

@@ -41,6 +41,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @Transactional
     public void editQuestion(int questionId, Question question) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        question.setUpdateTime(currentTimestamp);
         questionDAOImpl.editQuestion(questionId, question);
     }
 
@@ -49,6 +51,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionDTO createQuestion(Question question) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         question.setCreateTime(currentTimestamp);
+
         return questionDAOImpl.createQuestion(question);
     }
 
