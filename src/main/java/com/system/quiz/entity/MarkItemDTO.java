@@ -32,4 +32,5 @@ public class MarkItemDTO {
 
     private boolean isMarked;
 
+    private boolean isSubmited;
 }

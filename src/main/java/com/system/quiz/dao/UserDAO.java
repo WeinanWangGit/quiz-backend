@@ -5,6 +5,7 @@ import com.system.quiz.entity.Teacher;
 import com.system.quiz.entity.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface UserDAO {
      void saveUser(User user);
@@ -26,4 +27,6 @@ public interface UserDAO {
     Teacher getTeacherByUserId(Integer userId);
 
     ArrayList<Integer> getStudentIdListByDapartAndMajor(String department, String[] majorArray);
+
+    List<User> findAll();
 }

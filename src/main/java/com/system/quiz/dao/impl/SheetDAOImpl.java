@@ -151,8 +151,9 @@ public class SheetDAOImpl implements SheetDAO {
     }
     @Override
     public List<MarkItemDTO> getMarkListByTestId(int testId) {
+//        AND s.isSubmited = true  show all test not just submited
         TypedQuery<Sheet> query = entityManager.createQuery(
-                "SELECT s FROM Sheet s WHERE s.test.id = :testId AND s.isSubmited = true",
+                "SELECT s FROM Sheet s WHERE s.test.id = :testId",
                 Sheet.class);
         query.setParameter("testId", testId);
 
@@ -265,6 +266,7 @@ public class SheetDAOImpl implements SheetDAO {
             marItemDTO.setMajor(markedSheet.getStudent().getMajor());
             marItemDTO.setDepartment(markedSheet.getStudent().getDepartment());
             marItemDTO.setMarked(markedSheet.isMarked());
+            marItemDTO.setSubmited(markedSheet.isSubmited());
 
             Test test = markedSheet.getTest();
             marItemDTO.setTitle(test.getTitle());
@@ -320,6 +322,7 @@ public class SheetDAOImpl implements SheetDAO {
         testDTO.setRandomSort(test.isRandomSort());
         testDTO.setRetakeRule(test.getRetakeRule());
         testDTO.setSubmitMode(test.getSubmitMode());
+        testDTO.setAnswerShowModel(test.getAnswerShowModel());
         testDTO.setBeginTime(test.getBeginTime());
         testDTO.setTimer(test.getTimer());
         if(withQuestion){

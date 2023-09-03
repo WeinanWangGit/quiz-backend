@@ -1,5 +1,6 @@
 package com.system.quiz.dao;
 
+import com.system.quiz.entity.Answer;
 import com.system.quiz.entity.Question;
 import com.system.quiz.entity.QuestionDTO;
 
@@ -17,4 +18,8 @@ public interface QuestionDAO {
     QuestionDTO createQuestion(Question question);
 
     void deleteQuestion(int questionId);
+
+    Answer getAnswerByQuestionIdAndSheetId(Integer questionId, Integer id);
+
+    void saveAnswer(Answer answer);
 }

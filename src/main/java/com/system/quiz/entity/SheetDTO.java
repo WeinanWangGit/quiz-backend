@@ -26,4 +26,6 @@ public class SheetDTO {
 
     private boolean isSubmited;
 
+    private double correctnessRate;
+
 }

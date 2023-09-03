@@ -1,5 +1,6 @@
 package com.system.quiz.service;
 
+import com.system.quiz.entity.Answer;
 import com.system.quiz.entity.Question;
 import com.system.quiz.entity.QuestionDTO;
 
@@ -17,4 +18,7 @@ public interface QuestionService {
     QuestionDTO createQuestion(Question question);
 
     void deleteQuestion(int questionId);
+
+    void markAnswer(Question question, Answer answer);
+
 }

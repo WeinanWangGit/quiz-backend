@@ -6,6 +6,8 @@ import com.system.quiz.entity.User;
 import com.system.quiz.entity.UserDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface UserService {
 
@@ -22,4 +24,6 @@ public interface UserService {
     void saveStudent(Student student);
 
     UserDTO getCurrentUserInfoById(Integer userId);
+
+    List<User> findAll();
 }

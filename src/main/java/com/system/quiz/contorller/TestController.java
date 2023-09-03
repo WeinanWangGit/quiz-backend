@@ -70,10 +70,9 @@ public class TestController {
     }
 
     @GetMapping("/tests")
-    public ResponseEntity<ApiResponse<List<Test>>> getTestList() {
+    public ResponseEntity<List<Test>> getTestList() {
         List<Test> testList = testServiceImpl.findAll();
-        ApiResponse<List<Test>> response = new ApiResponse<>(HttpStatus.OK.value(), "All tests fetched successfully.", testList);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(testList);
     }
 
     @DeleteMapping("/test/delete/{testId}")

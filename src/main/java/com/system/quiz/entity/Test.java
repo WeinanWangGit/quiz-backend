@@ -38,6 +38,9 @@ public class Test {
     @Column(name = "begin_time")
     private Timestamp beginTime;
 
+    @Column(name = "end_time")
+    private Timestamp endTime;
+
     @Column(name = "complete_type")
     private String completeType;
 

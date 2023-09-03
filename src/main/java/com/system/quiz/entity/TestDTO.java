@@ -35,6 +35,8 @@ public class TestDTO {
 
     private String retakeRule;
 
+    private String answerShowModel;
+
     private List<QuestionDTO> questionDTOs;
 
 }

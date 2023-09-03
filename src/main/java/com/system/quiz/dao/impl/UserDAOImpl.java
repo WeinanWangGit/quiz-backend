@@ -5,11 +5,13 @@ import com.system.quiz.entity.Student;
 import com.system.quiz.entity.Teacher;
 import com.system.quiz.entity.User;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -95,6 +97,14 @@ public class UserDAOImpl implements UserDAO {
             return new ArrayList<>(query.getResultList());
         }
     }
+
+    @Override
+    public List<User> findAll() {
+        String queryStr = "SELECT u FROM User u";
+        Query query = entityManager.createQuery(queryStr);
+        return query.getResultList();
+    }
+
 
 
 
