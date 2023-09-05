@@ -69,10 +69,20 @@ public class SheetDAOImpl implements SheetDAO {
 
         Answer dbAnswer = getAnswerBySheetIdAndQuestionId(sheetId, questionId);
 
+
         if (dbAnswer != null) {
+            double oldScore = dbAnswer.getScore();
+
             dbAnswer.setContext(answer.getContext());
+            dbAnswer.setScore(answer.getScore());
+            dbAnswer.setFeedback(answer.getFeedback());
+            dbAnswer.setMarked(true);
             dbAnswer.setUpdateTime(new Timestamp(currentTimeMillis));
             entityManager.merge(dbAnswer);
+            Sheet sheet = entityManager.find(Sheet.class, sheetId);
+            double newScore = sheet.getScore() - oldScore + answer.getScore();
+            sheet.setScore(newScore);
+
             return dbAnswer;
         } else {
             answer.setCreateTime(new Timestamp(currentTimeMillis));
@@ -227,6 +237,11 @@ public class SheetDAOImpl implements SheetDAO {
         return markDTO;
     }
 
+    @Override
+    public void updateSheet(Sheet sheet) {
+        entityManager.merge(sheet);
+    }
+
     private MarkDTO buildMarkDTO(Sheet sheet) {
         MarkDTO markDTO = new MarkDTO();
         Test test = sheet.getTest();
@@ -241,6 +256,15 @@ public class SheetDAOImpl implements SheetDAO {
         markDTO.setMajor(sheet.getStudent().getMajor());
         markDTO.setDepartment(sheet.getStudent().getDepartment());
         markDTO.setSimilarity(sheet.getSimilarity());
+        boolean isAnonymous = true;
+        if(sheet.getAnonymous() == null ){
+            isAnonymous = true;
+        }else if (sheet.getAnonymous() == 0 ) {
+            isAnonymous = false;
+        }else{
+            isAnonymous = true;
+        }
+        markDTO.setAnonymous(isAnonymous);
 
         // Set testInfo
         markDTO.setTime(test.getTime());
@@ -252,14 +276,20 @@ public class SheetDAOImpl implements SheetDAO {
         markDTO.setSafeCheck(test.isSafeCheck());
         markDTO.setAnswerShowModel(test.getAnswerShowModel());
 
+        String teacherName = "";
         // Set questionDTOs
         List<QuestionDTO> questionDTOs = new ArrayList<>();
         for (Question question : questions) {
             QuestionDTO questionDTO = questionDAOImpl.buildQuestionDTO(question, true);
             questionDTOs.add(questionDTO);
+             teacherName = question.getTeacher().getUser().getOriginalUsername();
         }
         markDTO.setQuestionDTOs(questionDTOs);
 
+
+        if (!isAnonymous){
+            markDTO.setTeacherName(teacherName);
+        }
 
         markDTO.setAnswers(answers);
 
@@ -375,6 +405,8 @@ public class SheetDAOImpl implements SheetDAO {
         sheetDTO.setStartTime(sheet.getStartTime());
         sheetDTO.setStudentName(sheet.getStudent().getUser().getOriginalUsername());
         sheetDTO.setStudentNumber(sheet.getStudent().getNumber());
+        sheetDTO.setOpenTimes(sheet.getOpenTimes());
+        sheetDTO.setTakeTimes(sheet.getTakeTimes());
         return sheetDTO;
     }
 

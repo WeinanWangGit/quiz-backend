@@ -48,4 +48,15 @@ public class Sheet {
     private byte[] photo;
 
     private Double similarity;
+
+    @Column(name = "open_times")
+    private Integer openTimes;
+
+    @Column(name = "take_times")
+    private Integer takeTimes;
+
+    @Column(name = "anonymous")
+    private Integer anonymous;
+
+
 }

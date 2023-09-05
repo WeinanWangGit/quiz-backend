@@ -84,7 +84,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public ArrayList<Integer> getStudentIdListByDapartAndMajor(String department, String[] majorArray) {
-        if (majorArray == null || majorArray.length == 0) {
+        if (majorArray == null || majorArray.length == 0 || majorArray[0].equals("")) {
             TypedQuery<Integer> query = entityManager.createQuery(
                     "SELECT s.id FROM Student s WHERE s.department = :department", Integer.class);
             query.setParameter("department", department);

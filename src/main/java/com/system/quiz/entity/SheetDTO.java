@@ -28,4 +28,8 @@ public class SheetDTO {
 
     private double correctnessRate;
 
+    private Integer openTimes;
+
+    private Integer takeTimes;
+
 }

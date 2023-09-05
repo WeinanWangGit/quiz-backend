@@ -96,6 +96,23 @@ public class SheetController {
         }
     }
 
+
+    @PostMapping("/sheet/start/time/{sheetId}")
+    public ResponseEntity<String> saveStartTime(@PathVariable int sheetId, @RequestParam("startTime") Long startTimeMillis) {
+        try {
+            // Convert the received timestamp to java.sql.Timestamp
+            Timestamp startTime = new Timestamp(startTimeMillis);
+
+            Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
+
+            sheetServiceImpl.saveStartTime(sheet, startTime);
+
+            return ResponseEntity.ok("Test sheet submitted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting test sheet");
+        }
+    }
+
     @GetMapping("/mark/compare/{sheetId}")
     public ResponseEntity<?> getPhotoCompare(@PathVariable int sheetId) {
         try {
@@ -113,12 +130,13 @@ public class SheetController {
 
 
 
-    @PostMapping("/mark/post/{sheetId}")
-    public ResponseEntity<String> postMark(@PathVariable int sheetId) {
+    @PostMapping("/mark/post/{sheetId}/{isAnonymous}")
+    public ResponseEntity<String> postMark(@PathVariable int sheetId, @PathVariable int isAnonymous) {
         try {
+
             // Convert the received timestamp to java.sql.Timestamp
             Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
-            sheetServiceImpl.postMark(sheet);
+            sheetServiceImpl.postMark(sheet, isAnonymous);
 
             return ResponseEntity.ok("Test sheet submitted successfully");
         } catch (Exception e) {

@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         if(user!=null){
             userDTO.setId(user.getId());
             userDTO.setEmail(user.getEmail());
-            userDTO.setUsername(user.getUsername());
+            userDTO.setUsername(user.getOriginalUsername());
             String role = user.getRole().name();
             userDTO.setRole(role);
             userDTO.setAvatar(user.getAvatar());
@@ -104,6 +104,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        return userDAOImpl.findAll();
+        List<User> userList = userDAOImpl.findAll();
+        for (User user : userList) {
+            user.setUsername(user.getOriginalUsername());
+        }
+        return userList;
     }
 }

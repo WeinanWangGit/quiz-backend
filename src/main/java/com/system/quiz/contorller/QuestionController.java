@@ -1,4 +1,4 @@
-package com.system.quiz.contorller;
+package com.system.quiz.controller;
 
 import com.system.quiz.entity.Question;
 import com.system.quiz.entity.QuestionDTO;
@@ -21,8 +21,6 @@ public class QuestionController {
         this.questionServiceImpl = questionServiceImpl;
     }
 
-
-
     @PostMapping("/question/create")
     public ResponseEntity<QuestionDTO> createQuestion(@RequestBody Question question) {
         QuestionDTO questionDTO = questionServiceImpl.createQuestion(question);
@@ -30,30 +28,32 @@ public class QuestionController {
     }
 
     @GetMapping("/questions")
-    public List<Question> getQuestionList() {
-        return questionServiceImpl.findAll();
+    public ResponseEntity<List<Question>> getQuestionList() {
+        List<Question> questions = questionServiceImpl.findAll();
+        return ResponseEntity.ok(questions);
     }
 
-
     @GetMapping("/question/list/{teacherId}")
-    public List<QuestionDTO> getQuestionListByTeacherId(@PathVariable int teacherId) {
-        return questionServiceImpl.getQuestionListByTeacherId(teacherId);
+    public ResponseEntity<List<QuestionDTO>> getQuestionListByTeacherId(@PathVariable int teacherId) {
+        List<QuestionDTO> questionDTOs = questionServiceImpl.getQuestionListByTeacherId(teacherId);
+        return ResponseEntity.ok(questionDTOs);
     }
 
     @PostMapping("/question/add/{testId}")
-    public void addQuestionToTest(@PathVariable int testId, @RequestBody Question question) {
+    public ResponseEntity<Void> addQuestionToTest(@PathVariable int testId, @RequestBody Question question) {
         questionServiceImpl.addQuestionToTest(testId, question);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/question/edit")
-    public void editQuestion(@RequestBody Question question) {
+    public ResponseEntity<Void> editQuestion(@RequestBody Question question) {
         questionServiceImpl.editQuestion(question.getId(), question);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/question/delete/{questionId}")
-    public void deleteQuestion(@PathVariable int questionId) {
+    public ResponseEntity<Void> deleteQuestion(@PathVariable int questionId) {
         questionServiceImpl.deleteQuestion(questionId);
+        return ResponseEntity.ok().build();
     }
-
-
 }

@@ -41,4 +41,8 @@ public class MarkDTO {
 
     private List<Answer> answers;
 
+    private boolean isAnonymous;
+
+    private String teacherName;
+
 }

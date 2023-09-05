@@ -59,9 +59,19 @@ public class SheetServiceImpl implements SheetService {
     @Transactional
     public SheetDTO submitTestSheet(Sheet sheet, Timestamp startTime) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        sheet.setSubmitTime(currentTimestamp);
-        sheet.setSubmited(true);
-        sheet.setStartTime(startTime);
+        if(sheet.getSubmitTime() == null){
+            sheet.setSubmitTime(currentTimestamp);
+            sheet.setSubmited(true);
+            sheet.setTakeTimes(1);
+        }else{
+            sheet.setSubmitTime(currentTimestamp);
+            sheet.setSubmited(true);
+            Integer times = sheet.getTakeTimes();
+            if(times !=null){
+                sheet.setTakeTimes(++times);
+            }
+        }
+//        sheet.setStartTime(startTime);
 
         //auto mark step
         double correctnessRate = autoMarkSheetStep(sheet);
@@ -253,11 +263,12 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional
-    public void postMark(Sheet sheet) {
+    public void postMark(Sheet sheet, int isAnonymous) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         sheet.setUpdateTime(currentTimestamp);
          sheet.setMarked(true);
-         sheetDAOImpl.saveSheet(sheet);
+         sheet.setAnonymous(isAnonymous);
+         sheetDAOImpl.updateSheet(sheet);
     }
 
     @Override
@@ -268,6 +279,21 @@ public class SheetServiceImpl implements SheetService {
         faceCompareDTO.setPhoto(photo);
         faceCompareDTO.setAvatar(avatar);
         return faceCompareDTO;
+    }
+
+    @Override
+    @Transactional
+    public void saveStartTime(Sheet sheet, Timestamp startTime) {
+        if(sheet.getStartTime() == null){
+            sheet.setOpenTimes(1);
+            sheet.setStartTime(startTime);
+        }else{
+            Integer times = sheet.getOpenTimes();
+            sheet.setOpenTimes(++times);
+        }
+
+        sheetDAOImpl.updateSheet(sheet);
+
     }
 
 
