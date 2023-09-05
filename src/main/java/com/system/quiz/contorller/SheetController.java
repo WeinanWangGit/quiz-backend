@@ -62,12 +62,13 @@ public class SheetController {
 
 
     @PostMapping("/sheet/photo/save/{sheetId}")
-    public ResponseEntity<ApiResponse<String>> savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photo) {
+    public ResponseEntity<ApiResponse<String>> savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photoFile) {
         try {
             Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
-            byte[] photoData = photo.getBytes();
+            byte[] photoData = photoFile.getBytes();
             sheet.setPhoto(photoData);
             sheetServiceImpl.saveSheet(sheet);
+//            sheetServiceImpl.updateSheet(sheet);
             ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK.value(), "Sheet photo save success", null);
             return ResponseEntity.ok(response);
         } catch (IOException e) {

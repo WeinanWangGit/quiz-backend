@@ -224,7 +224,7 @@ public class SheetServiceImpl implements SheetService {
             //set a 0 score in sheet
             sheet.setSimilarity(0.0);
         }
-        sheetDAOImpl.saveSheet(sheet);
+        sheetDAOImpl.updateSheet(sheet);
 
     }
 
@@ -294,6 +294,12 @@ public class SheetServiceImpl implements SheetService {
 
         sheetDAOImpl.updateSheet(sheet);
 
+    }
+
+    @Override
+    @Transactional
+    public void updateSheet(Sheet sheet) {
+        sheetDAOImpl.updateSheet(sheet);
     }
 
 

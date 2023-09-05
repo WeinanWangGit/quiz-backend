@@ -42,4 +42,6 @@ public interface SheetService {
     FaceCompareDTO getPhotoCompare(Sheet sheet);
 
     void saveStartTime(Sheet sheet, Timestamp startTime);
+
+    void updateSheet(Sheet sheet);
 }
