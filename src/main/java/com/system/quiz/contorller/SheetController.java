@@ -6,6 +6,7 @@ import com.system.quiz.service.impl.SheetServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,21 +32,25 @@ public class SheetController {
      * @return
      */
     @GetMapping("/sheet/list/{studentId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT','ADMIN')")
     public List<SheetDTO> getSheetListByStudentId(@PathVariable int studentId) {
         return sheetServiceImpl.getSheetDTOListByStudentId(studentId);
     }
 
     @GetMapping("/sheet/{testId}/{studentId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'ADMIN')")
     public Sheet getSheetByTestIdAndStudentId(@PathVariable int testId, @PathVariable int studentId) {
         return sheetServiceImpl.getSheetByTestIdAndStudentId(testId, studentId);
     }
 
     @GetMapping("/sheet/{sheetId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public SheetDTO getSheetDTOById(@PathVariable int sheetId) {
         return sheetServiceImpl.getSheetDTOById(sheetId);
     }
 
     @PostMapping("/sheet/answer/save/{questionId}/{sheetId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Answer>> saveSheetQuestionAnswer(@PathVariable int questionId, @PathVariable int sheetId, @RequestBody Answer answer) {
         try {
             Answer saved = sheetServiceImpl.saveSheetQuestionAnswer(questionId, sheetId, answer);
@@ -62,6 +67,7 @@ public class SheetController {
 
 
     @PostMapping("/sheet/photo/save/{sheetId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<ApiResponse<String>> savePhoto(@PathVariable int sheetId, @RequestParam("photo") MultipartFile photoFile) {
         try {
             Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
@@ -80,6 +86,7 @@ public class SheetController {
 
 
     @PostMapping("/sheet/submit/{sheetId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<ApiResponse<SheetDTO>> submitTestSheet(@PathVariable int sheetId, @RequestParam("startTime") Long startTimeMillis) {
         try {
             // Convert the received timestamp to java.sql.Timestamp
@@ -99,6 +106,7 @@ public class SheetController {
 
 
     @PostMapping("/sheet/start/time/{sheetId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<String> saveStartTime(@PathVariable int sheetId, @RequestParam("startTime") Long startTimeMillis) {
         try {
             // Convert the received timestamp to java.sql.Timestamp
@@ -115,6 +123,7 @@ public class SheetController {
     }
 
     @GetMapping("/mark/compare/{sheetId}")
+    @PreAuthorize("hasAnyAuthority('TEACHER', 'ADMIN')")
     public ResponseEntity<?> getPhotoCompare(@PathVariable int sheetId) {
         try {
             Sheet sheet = sheetServiceImpl.getSheetById(sheetId);
@@ -132,6 +141,7 @@ public class SheetController {
 
 
     @PostMapping("/mark/post/{sheetId}/{isAnonymous}")
+    @PreAuthorize("hasAnyAuthority('TEACHER', 'ADMIN')")
     public ResponseEntity<String> postMark(@PathVariable int sheetId, @PathVariable int isAnonymous) {
         try {
 
@@ -147,28 +157,33 @@ public class SheetController {
     }
 
     @GetMapping("/mark/list/student/{studentId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public List<MarkItemDTO> getMarkListByStudentId(@PathVariable int studentId) {
         return sheetServiceImpl.getMarkListByStudentId(studentId);
     }
 
 
     @GetMapping("/mark/list/test/{testId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public List<MarkItemDTO> getMarkListByTestId(@PathVariable int testId) {
         return sheetServiceImpl.getMarkListByTestId(testId);
     }
 
     @GetMapping("/mark/list/{teacherId}/{testId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public List<MarkItemDTO> getMarkListByTeacherIdOrTestId(@PathVariable int teacherId, @PathVariable int testId) {
         return sheetServiceImpl.getMarkListByTeacherIdOrTestId(teacherId, testId);
     }
 
     @GetMapping("/mark/{testId}/{studentId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public Sheet getMarkSheetByTestIdAndStudentId(@PathVariable int testId, @PathVariable int studentId) {
         return sheetServiceImpl.getMarkSheetByTestIdAndStudentId(testId, studentId);
     }
 
 
     @GetMapping("/mark/{sheetId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public MarkDTO getMarkDTOBySheetId(@PathVariable int sheetId) {
         return sheetServiceImpl.getMarkDTOBySheetId(sheetId);
     }
