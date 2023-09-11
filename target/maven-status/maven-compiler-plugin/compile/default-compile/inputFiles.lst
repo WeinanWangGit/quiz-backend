@@ -6,7 +6,6 @@
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/entity/UserDTO.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/entity/Teacher.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/service/impl/UserServiceImpl.java
-/Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/service/JwtService.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/entity/QuestionDTO.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/service/TestService.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/dao/impl/TestDAOImpl.java
@@ -21,6 +20,7 @@
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/dao/impl/UserDAOImpl.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/exception/ClassNotFoundException.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/contorller/SheetController.java
+/Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/config/JwtService.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/service/QuestionService.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/dao/SheetDAO.java
 /Users/weinanwang/develop/code/backend/src/main/java/com/system/quiz/entity/SheetDTO.java

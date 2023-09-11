@@ -93,13 +93,14 @@ public class QuestionServiceImpl implements QuestionService {
                 // Ignore leading/trailing spaces
                 choice = choice.trim();
 
+                double choiceScore = question.getScore()/questionChoices.length;
                 // Check if the choice is in the question's answers
                 if (containsIgnoreCase(questionAnswers, choice)) {
                     // Add points for a correct choice
-                    score += question.getScore();
+                    score += choiceScore;
                 } else if (!containsIgnoreCase(questionChoices, choice)) {
                     // Deduct points for an incorrect choice, but not less than 0 points
-                    score = Math.max(0, score - question.getScore());
+                    score = Math.max(0, score - choiceScore);
                 }
             }
         }

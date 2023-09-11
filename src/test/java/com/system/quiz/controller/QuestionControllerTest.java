@@ -39,6 +39,7 @@ public class QuestionControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Test
+//    @WithMockUser(roles = "TEACHER")
     public void testCreateQuestion() throws Exception {
         // Mock data
         Question question = new Question();

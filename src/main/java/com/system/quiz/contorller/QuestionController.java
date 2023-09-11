@@ -1,4 +1,4 @@
-package com.system.quiz.controller;
+package com.system.quiz.contorller;
 
 import com.system.quiz.entity.Question;
 import com.system.quiz.entity.QuestionDTO;

@@ -1,3 +1,4 @@
+com/system/quiz/controller/SheetControllerTest.class
+com/system/quiz/controller/UserControllerTest.class
+com/system/quiz/controller/TestControllerTest.class
 com/system/quiz/controller/QuestionControllerTest.class
-com/system/quiz/QuizApplicationTests.class
-com/system/quiz/TestControllerIntegrationTest.class

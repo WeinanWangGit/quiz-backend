@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -96,6 +95,9 @@ public class SheetServiceImpl implements SheetService {
         for (Question question : questions) {
             Integer questionId = question.getId();
             Answer answer = questionDAOImpl.getAnswerByQuestionIdAndSheetId(questionId, sheet.getId());
+            if(answer == null ){
+                break;
+            }
             questionServiceImpl.markAnswer(question, answer);
             sheetScore += answer.getScore();
 
