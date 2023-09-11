@@ -190,7 +190,7 @@ public class SheetServiceImpl implements SheetService {
 
 
         // Load the cascade classifier for face detection
-        CascadeClassifier faceCascade = new CascadeClassifier("/Users/weinanwang/develop/code/backend/src/main/resources/haarcascade_frontalface_default.xml");
+        CascadeClassifier faceCascade = new CascadeClassifier("/resources/haarcascade_frontalface_default.xml");
 
         // Convert avatar and photo bytes to Mat (OpenCV matrix)
         Mat avatarMat = Imgcodecs.imdecode(new MatOfByte(avatar), Imgcodecs.IMREAD_COLOR);

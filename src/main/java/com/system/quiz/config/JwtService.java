@@ -1,26 +1,25 @@
 package com.system.quiz.config;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonGenerator;
-import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
 @Service
 public class JwtService {
 
-    private final String CLIENT_ID = "769052452189-l67s5fik61rthvjk2vkil5jckrn9rb3l.apps.googleusercontent.com";
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private final String CLIENT_ID = "";
     private final HttpTransport transport = new NetHttpTransport();
 
     private final JsonFactory jsonFactory = new JacksonFactory();

@@ -4,10 +4,5 @@ spring:
       client:
         registration:
           google:
-            client-id: 769052452189-l67s5fik61rthvjk2vkil5jckrn9rb3l.apps.googleusercontent.com
-            client-secret: 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
-#            scope: openid,profile,email
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://accounts.google.com
-#          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+            client-id: "Google client id"
+            client-secret: "Google secret key"
