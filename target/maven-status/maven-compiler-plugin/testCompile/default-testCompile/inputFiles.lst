@@ -1,3 +1,4 @@
 /Users/weinanwang/develop/code/backend/src/test/java/com/system/quiz/controller/QuestionControllerTest.java
-/Users/weinanwang/develop/code/backend/src/test/java/com/system/quiz/TestControllerIntegrationTest.java
-/Users/weinanwang/develop/code/backend/src/test/java/com/system/quiz/QuizApplicationTests.java
+/Users/weinanwang/develop/code/backend/src/test/java/com/system/quiz/controller/UserControllerTest.java
+/Users/weinanwang/develop/code/backend/src/test/java/com/system/quiz/controller/TestControllerTest.java
+/Users/weinanwang/develop/code/backend/src/test/java/com/system/quiz/controller/SheetControllerTest.java

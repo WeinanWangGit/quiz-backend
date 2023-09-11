@@ -37,7 +37,11 @@ public interface SheetService {
 
     MarkDTO getMarkDTOBySheetId(int sheetId);
 
-    void postMark(Sheet sheet);
+    void postMark(Sheet sheet, int isAnonymous);
 
     FaceCompareDTO getPhotoCompare(Sheet sheet);
+
+    void saveStartTime(Sheet sheet, Timestamp startTime);
+
+    void updateSheet(Sheet sheet);
 }

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -59,9 +58,19 @@ public class SheetServiceImpl implements SheetService {
     @Transactional
     public SheetDTO submitTestSheet(Sheet sheet, Timestamp startTime) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        sheet.setSubmitTime(currentTimestamp);
-        sheet.setSubmited(true);
-        sheet.setStartTime(startTime);
+        if(sheet.getSubmitTime() == null){
+            sheet.setSubmitTime(currentTimestamp);
+            sheet.setSubmited(true);
+            sheet.setTakeTimes(1);
+        }else{
+            sheet.setSubmitTime(currentTimestamp);
+            sheet.setSubmited(true);
+            Integer times = sheet.getTakeTimes();
+            if(times !=null){
+                sheet.setTakeTimes(++times);
+            }
+        }
+//        sheet.setStartTime(startTime);
 
         //auto mark step
         double correctnessRate = autoMarkSheetStep(sheet);
@@ -86,6 +95,9 @@ public class SheetServiceImpl implements SheetService {
         for (Question question : questions) {
             Integer questionId = question.getId();
             Answer answer = questionDAOImpl.getAnswerByQuestionIdAndSheetId(questionId, sheet.getId());
+            if(answer == null ){
+                break;
+            }
             questionServiceImpl.markAnswer(question, answer);
             sheetScore += answer.getScore();
 
@@ -214,7 +226,7 @@ public class SheetServiceImpl implements SheetService {
             //set a 0 score in sheet
             sheet.setSimilarity(0.0);
         }
-        sheetDAOImpl.saveSheet(sheet);
+        sheetDAOImpl.updateSheet(sheet);
 
     }
 
@@ -253,11 +265,12 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     @Transactional
-    public void postMark(Sheet sheet) {
+    public void postMark(Sheet sheet, int isAnonymous) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         sheet.setUpdateTime(currentTimestamp);
          sheet.setMarked(true);
-         sheetDAOImpl.saveSheet(sheet);
+         sheet.setAnonymous(isAnonymous);
+         sheetDAOImpl.updateSheet(sheet);
     }
 
     @Override
@@ -268,6 +281,27 @@ public class SheetServiceImpl implements SheetService {
         faceCompareDTO.setPhoto(photo);
         faceCompareDTO.setAvatar(avatar);
         return faceCompareDTO;
+    }
+
+    @Override
+    @Transactional
+    public void saveStartTime(Sheet sheet, Timestamp startTime) {
+        if(sheet.getStartTime() == null){
+            sheet.setOpenTimes(1);
+            sheet.setStartTime(startTime);
+        }else{
+            Integer times = sheet.getOpenTimes();
+            sheet.setOpenTimes(++times);
+        }
+
+        sheetDAOImpl.updateSheet(sheet);
+
+    }
+
+    @Override
+    @Transactional
+    public void updateSheet(Sheet sheet) {
+        sheetDAOImpl.updateSheet(sheet);
     }
 
 

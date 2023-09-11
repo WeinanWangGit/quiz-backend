@@ -5,6 +5,7 @@ import com.system.quiz.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,6 @@ public class UserController {
     public UserController(UserServiceImpl userServiceImpl) {
         this.userServiceImpl = userServiceImpl;
     }
-
 
 
     @PostMapping("/login")
@@ -62,6 +62,7 @@ public class UserController {
 
 
     @PostMapping("/role/{userId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<LoginResponseDTO> setUserRoleById(@RequestBody Map<String, String> requestBody, @PathVariable("userId") Integer userId) {
         String role = requestBody.get("role");
         String number = requestBody.get("number");
@@ -98,6 +99,7 @@ public class UserController {
 
 
     @GetMapping("/{userId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable("userId") Integer userId) {
         User user = userServiceImpl.getUserById(userId);
         if (user != null) {
@@ -110,6 +112,7 @@ public class UserController {
 
 
     @GetMapping("/info/{userId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<UserDTO> getCurrentUserInfoById(@PathVariable("userId") Integer userId) {
         UserDTO userDTO = userServiceImpl.getCurrentUserInfoById(userId);
 
@@ -130,6 +133,7 @@ public class UserController {
 
 
     @PostMapping("/avatar/{userId}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<String> uploadAvatar(@RequestParam("avatar") MultipartFile avatarFile, @PathVariable("userId") Integer userId) {
         // Validate the avatar file
         if (avatarFile.isEmpty()) {
@@ -154,7 +158,8 @@ public class UserController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getTestList() {
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<List<User>> getUserList() {
         List<User> userList = userServiceImpl.findAll();
         return ResponseEntity.ok(userList);
     }

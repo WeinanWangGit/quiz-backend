@@ -34,4 +34,6 @@ public interface SheetDAO {
     List<MarkItemDTO> getMarkListByTeacherId(int teacherId);
 
     MarkDTO getMarkDTOBySheetId(int sheetId);
+
+    void updateSheet(Sheet sheet);
 }
